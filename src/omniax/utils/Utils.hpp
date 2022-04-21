@@ -1,0 +1,296 @@
+#ifndef __DATATYPES__HPP__
+#define __DATATYPES__HPP__
+
+#include "Geometry.hpp"
+#include "Types.hpp"
+#include <omniax/vendor/FastNoiseLite.hpp>
+#include <string>
+//#include <SFML/System/Clock.hpp>
+
+namespace ox
+{
+	enum class eTimeUnits
+	{
+		Seconds = 0,
+		Milliseconds,
+		Microseconds,
+		Nanoseconds
+	};
+
+	enum class eMonths
+	{
+		January = 0,
+		February,
+		March,
+		April,
+		May,
+		June,
+		July,
+		August,
+		September,
+		October,
+		November,
+		December
+	};
+
+	// struct RealTime
+	// {
+	// 	public:
+	// 		RealTime(void);
+	// 		const float& start(void);
+	// 		inline const float& getTimeOfDay(void) const { return m_timeOfDay; }
+	// 		String asString(void);
+	// 		void update(void);
+
+	// 	private:
+	// 		String getFormattedTime(void);
+	// 		String convertMonth(void);
+
+	// 	public:
+	// 		uint8_t minutes;
+	// 		uint8_t hours;
+	// 		uint16_t days;
+	// 		uint8_t months;
+	// 		uint16_t years;
+
+	// 	private:
+	// 		sf::Clock m_rtClock;
+	// 		float m_timeOfDay;
+	// 		float m_totalSeconds;
+	// };
+
+	class LocalTime
+	{
+		public:
+			String getFullString(bool include_date = true, bool include_time = true, bool day_name = true, bool month_as_name = true, bool include_seconds = true) const;
+			inline String getDateString(bool day_name = true, bool month_as_name = true) { return getFullString(true, false, day_name, month_as_name, false); }
+			inline String getTimeString(bool include_seconds = true) { return getFullString(false, true, false, false, include_seconds); }
+			int32_t hours(void) const;
+			int32_t minutes(void) const;
+			int32_t seconds(void) const;
+			int32_t day(void) const;
+			int32_t month(void) const;
+			int32_t year(void) const;
+			int32_t weekDay(void) const;
+			String shours(bool leading_zero = true) const;
+			String sminutes(bool leading_zero = true) const;
+			String sseconds(bool leading_zero = true) const;
+			String sday(bool leading_zero = true) const;
+			String smonth(bool leading_zero = true, bool month_name = true) const;
+			String syear(void) const;
+			String sWeekDay(bool day_name = true) const;
+
+		protected:
+			virtual String monthToText(int32_t month) const;
+			virtual String weekDayToText(int32_t day) const;
+	};
+
+	typedef LocalTime LocalTime_EN;
+	class LocalTime_IT : public LocalTime
+	{
+		protected:
+			String monthToText(int32_t month) const override;
+			String weekDayToText(int32_t day) const override;
+	};
+	class LocalTime_ES : public LocalTime
+	{
+		protected:
+			String monthToText(int32_t month) const override;
+			String weekDayToText(int32_t day) const override;
+	};
+	class LocalTime_DE : public LocalTime
+	{
+		protected:
+			String monthToText(int32_t month) const override;
+			String weekDayToText(int32_t day) const override;
+	};
+
+	class Timer
+	{
+		public:
+			inline Timer(void) { m_started = false; m_current = 0; m_timeUnit = eTimeUnits::Nanoseconds; m_dest = nullptr; }
+			uint64_t start(bool print = true, String name = "", eTimeUnits timeUnit = eTimeUnits::Nanoseconds, IOutputHandler* __destination = nullptr);
+			uint64_t end(bool print = true);
+
+		private:
+			bool m_started;
+			int64_t m_current;
+			eTimeUnits m_timeUnit;
+			String m_name;
+			IOutputHandler* m_dest;
+	};
+
+	class Utils
+	{
+		public:
+			static inline const uint64_t getStartTime(void) { return Utils::s_startTime_ms; }
+			static void init(void);
+			static bool isHex(String hex);
+			static bool isBin(String bin);
+			static bool isInt(String str);
+			static int64_t strToInt(String str);
+			static bool readFile(String fileName, std::vector<String>& outLines);
+			static String getHexStr(uint64_t value, bool prefix = true, uint8_t nbytes = 1);
+			static String getBinStr(uint64_t value, bool prefix = true, uint8_t nbytes = 1);
+			static String duplicateChar(unsigned char c, uint16_t count);
+			static void sleep(uint32_t __time, eTimeUnits __unit = eTimeUnits::Milliseconds);
+			static uint64_t getRunningTime_ms(void);
+			//static bool setClipboardText(String text);
+			//static String getClipboardText(void);
+			static float get_rand_float(float min = 0.0f, float max = 1.0f);
+			static float map_value(float input, float input_start, float input_end, float output_start, float output_end);
+			static bool loadFileFromHppResource(String output_file_path, const char* resource_buffer, unsigned int size);
+
+		private:
+			inline static uint64_t s_startTime_ms;
+	};
+
+	class StringEditor
+	{
+		public: class Tokens
+		{
+			public:
+				inline bool hasNext(void) { return m_tokens.size() > 0 && m_current_index < m_tokens.size(); }
+				inline bool hasPrevious(void) { return m_tokens.size() > 0 && m_current_index > 0; }
+				String next(void);
+				String previous(void);
+				inline uint32_t count(void) { return m_tokens.size(); }
+				inline std::vector<String> getRawData(void) { return m_tokens; }
+				inline uint32_t getCurrentIndex(void) { return m_current_index; }
+
+				inline auto begin(void) { return m_tokens.begin(); }
+				inline auto end(void) { return m_tokens.end(); }
+				inline auto cbegin(void) const { return m_tokens.begin(); }
+				inline auto cend(void) const { return m_tokens.end(); }
+				inline auto begin(void) const { return m_tokens.begin(); }
+				inline auto end(void) const { return m_tokens.end(); }
+				
+			private:
+				inline Tokens(void) { m_current_index = 0; }
+
+			private:
+				std::vector<String> m_tokens;
+				uint32_t m_current_index;
+
+			public:
+				inline static const String END = "%END%";
+
+				friend class StringEditor;
+		};
+
+		public:
+			inline StringEditor(void) { m_data = ""; }
+			inline StringEditor(const String& str) { m_data = str; }
+			inline StringEditor(const char* str) { m_data = str; }
+			inline String str(void) const { return m_data; }
+			inline uint32_t len(void) { return m_data.length(); }
+			inline StringEditor& clr(void) { m_data = ""; return *this; }
+			inline const char* c_str(void) { return m_data.c_str(); }
+			inline char at(uint32_t index) { return m_data[index]; }
+			inline char operator[](uint32_t index) { return m_data[index]; }
+			inline StringEditor& set(String str) { m_data = str; return *this; }
+
+			StringEditor& ltrim(void);
+			StringEditor& rtrim(void);
+			StringEditor& trim(void);
+
+			StringEditor& toLower(void);
+			StringEditor& toUpper(void);
+
+			StringEditor& addPadding(char c = ' ', uint32_t count = 10);
+			//StringEditor& add(const StringEditor& se);
+			StringEditor& add(String str);
+			StringEditor& add(char c);
+			StringEditor& addi(uint8_t i);
+			StringEditor& addi(int8_t i);
+			StringEditor& addi(uint16_t i);
+			StringEditor& addi(int16_t i);
+			StringEditor& addi(uint32_t i);
+			StringEditor& addi(int32_t i);
+			StringEditor& addi(uint64_t i);
+			StringEditor& addi(int64_t i);
+			StringEditor& addf(float f);
+			StringEditor& addf(double f);
+
+			StringEditor& reverse(void);
+			StringEditor& replaceAll(String what, String with);
+			StringEditor& replaceFirst(String what, String with);
+
+			StringEditor& put(uint32_t index, char c);
+
+			int64_t toInt(void);
+			float toFloat(void);
+			double toDouble(void);
+			bool isNumeric(bool decimal = false);
+			bool contains(char c);
+			bool contains(String str);
+			bool startsWith(String str);
+			bool endsWith(String str);
+			String getReverse(void);
+			
+			int32_t indexOf(char c, uint32_t start = 0);
+			int32_t indexOf(String str, uint32_t start = 0);
+			int32_t lastIndexOf(char c);
+			int32_t lastIndexOf(String str);
+
+			String substr(uint32_t start, int32_t end = -1);
+			Tokens tokenize(String delimiter = " ", bool trim_tokens = true, bool allow_white_space_only_tokens = false);
+
+			friend std::ostream& operator<<(std::ostream& out, const StringEditor& val);
+
+		private:
+			String m_data;
+	};
+
+	class Color;
+	class BaseObject;
+	class IOutputHandler
+	{
+		public:
+			virtual IOutputHandler& col(String color) = 0;
+			virtual IOutputHandler& col(const Color& color) = 0;
+			//virtual IOutputHandler& p(String str) = 0;
+			virtual IOutputHandler& p(char c) = 0;
+			virtual IOutputHandler& p(const StringEditor& se) = 0;
+			//virtual IOutputHandler& p(const BaseObject& bo) = 0;
+			virtual IOutputHandler& pi(uint8_t i) = 0;
+			virtual IOutputHandler& pi(int8_t i) = 0;
+			virtual IOutputHandler& pi(uint16_t i) = 0;
+			virtual IOutputHandler& pi(int16_t i) = 0;
+			virtual IOutputHandler& pi(uint32_t i) = 0;
+			virtual IOutputHandler& pi(int32_t i) = 0;
+			virtual IOutputHandler& pi(uint64_t i) = 0;
+			virtual IOutputHandler& pi(int64_t i) = 0;
+			virtual IOutputHandler& pf(float f, uint8_t precision = 0) = 0;
+			virtual IOutputHandler& pf(double f, uint8_t precision = 0) = 0;
+			virtual IOutputHandler& nl(void) = 0;
+			virtual IOutputHandler& flush(void) = 0;
+			virtual IOutputHandler& reset(void) = 0;
+	};
+
+	class ConsoleOutputHandler : public IOutputHandler
+	{
+		public:
+			IOutputHandler& col(String color);
+			IOutputHandler& col(const Color& color);
+			//IOutputHandler& p(String str);
+			IOutputHandler& p(char c);
+			IOutputHandler& p(const StringEditor& se);
+			//IOutputHandler& p(const BaseObject& bo);
+			IOutputHandler& pi(uint8_t i);
+			IOutputHandler& pi(int8_t i);
+			IOutputHandler& pi(uint16_t i);
+			IOutputHandler& pi(int16_t i);
+			IOutputHandler& pi(uint32_t i);
+			IOutputHandler& pi(int32_t i);
+			IOutputHandler& pi(uint64_t i);
+			IOutputHandler& pi(int64_t i);
+			IOutputHandler& pf(float f, uint8_t precision = 0);
+			IOutputHandler& pf(double f, uint8_t precision = 0);
+			IOutputHandler& nl(void);
+			IOutputHandler& flush(void);
+			IOutputHandler& reset(void);
+	};
+} // namespace ox
+
+#endif
