@@ -203,6 +203,7 @@ namespace ox
 			inline Rectangle(float xx, float yy, Vec2 size) { x = xx; y = yy; w = size.x; h = size.y; }
 			inline Rectangle(Vec2 position, float ww, float hh) { x = position.x; y = position.y; w = ww; h = hh; }
 			inline Rectangle(Vec2 position, Vec2 size) { x = position.x; y = position.y; w = size.x; h = size.y; }
+			virtual ~Rectangle(void) = default;
 
 			inline float getx(void) const { return x; }
 			inline float gety(void) const { return y; }

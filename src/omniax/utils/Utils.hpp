@@ -3,6 +3,7 @@
 
 #include "Geometry.hpp"
 #include "Types.hpp"
+#include "Logger.hpp"
 #include <omniax/vendor/FastNoiseLite.hpp>
 #include <string>
 //#include <SFML/System/Clock.hpp>
@@ -157,6 +158,7 @@ namespace ox
 				inline uint32_t count(void) { return m_tokens.size(); }
 				inline std::vector<String> getRawData(void) { return m_tokens; }
 				inline uint32_t getCurrentIndex(void) { return m_current_index; }
+				inline void cycle(void) { m_current_index = 0; }
 
 				inline auto begin(void) { return m_tokens.begin(); }
 				inline auto end(void) { return m_tokens.end(); }

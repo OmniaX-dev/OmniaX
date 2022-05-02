@@ -31,6 +31,7 @@
 /** ===========================================================[ Fragment Shader ]=========================================================== **/
     out vec4 out_FragColor;
     uniform sampler2D u_textures[16];
+    uniform vec4 u_testColor;
 
     in vec4 v_vertexColor;
     in vec2 v_texCoords;
@@ -39,6 +40,6 @@
     void main()
     {
         int iTexID = int(v_texIndex);
-        out_FragColor = texture(u_textures[iTexID], v_texCoords) * v_vertexColor;
+        out_FragColor = texture(u_textures[iTexID], v_texCoords) * v_vertexColor * u_testColor;
     }
 /** ========================================================================================================================================= **/

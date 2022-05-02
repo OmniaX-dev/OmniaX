@@ -1,0 +1,129 @@
+[# ICON_SIZE = %(30, 30)]
+
+[*SpriteSheet:
+	imagePath  =  "res/icons.png";
+	name       =  "IconSheet";
+	numSprites   =  (20, 20);
+	spriteSize   =  ICON_SIZE;
+]
+
+[ANIMATION:
+	name = "CreateComponent";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (0, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "AddComponent";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (1, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "About";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (2, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "DeleteComponent";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (3, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "NewProject";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (4, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "OpenProject";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (5, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "SaveProject";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (6, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "SaveAs";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (7, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "LastSession";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (8, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "Settings";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (9, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]
+
+[ANIMATION:
+	name = "Terminal";
+	frameCount = 1;
+	delay = 1;
+	grid = (1, 1);
+	frameOffset = (10, 0);
+	stillFrame = 0;
+	frameSize = ICON_SIZE;
+	Still = TRUE;
+]

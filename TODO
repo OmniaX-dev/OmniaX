@@ -1,5 +1,6 @@
-/**  Utility **/
+/** Utility **/
 [ADD]: A way to render QuadTrees
 [ADD]: Port ox::RealTime (Utils) from sf::Clock to some other kind of clock (probably to ox::Timer) / (Maybe also rename RealTime to something else)
 [ADD]: Implement setClipboardText/getClipboardText in ox::Utils class
 [ADD]: A way to format Strings (foreground/background colors) using custom format style (and then fix ox::ConsoleOutputHandler to check for formatted strings)
+[ADD]: Shader handling in ox::Renderer

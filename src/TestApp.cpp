@@ -1,6 +1,12 @@
 #include "TestApp.hpp"
 //#include <omniax/vendor/imgui/imgui_demo.cpp>
 
+void TestObj::handleSignal(ox::tSignal& signal)
+{
+    std::cout << signal.userData.getTypeName() << ": Signal ID: " << (int)(signal.ID) << "\n";
+    signal.handled = true;
+}
+
 void TestApp::onSetup(void)
 {
     camera.create(0.0f, m_windowWidth * 1.0f, m_windowHeight * 1.0f, 0.0f);
@@ -14,30 +20,29 @@ void TestApp::onSetup(void)
         samplers[i] = i;
     glUniform1iv(baseShader.gl_getUniformLocation("u_textures"), 16, samplers);
     addOpenGLClearBit(GL_DEPTH_BUFFER_BIT);
+
+    setCustomData1(camera);
+
+    obj.connectSignal(ox::tBuiltinSignals::MouseMoved);
+    obj.connectSignal(ox::tBuiltinSignals::MouseReleased);
+    obj.connectSignal(ox::tBuiltinSignals::KeyPressed);
+
+    fic.add(colInterp1);
+    fic.add(colInterp2);
+    fic.add(colInterp3);
 }
 
-void TestApp::onFrameStart(void)
-{
-    timer.start(false, "", ox::eTimeUnits::Milliseconds);
-    timer2.start(false, "", ox::eTimeUnits::Milliseconds);
-}
-
-void TestApp::onFrameEnd(void)
-{
-    ms = timer.end(false);
-    sum += timer2.end(false);
-    if (sum > 500)
-    {
-        sum = 0;
-        fps = (1 / (ms / 1000.0f));
-    }
-}
+void TestApp::onFrameStart(void) {  }
+void TestApp::onFrameEnd(void) {  }
+void TestApp::onUpdate(void) {  }
 
 void TestApp::onRender(void)
 {
+    fic.update();
     baseShader.bind();
     baseShader.updateUniform_mat4f("u_viewProjMatrix", camera.getViewProjectionMatrix());
     baseShader.updateUniform_mat4f("u_modelMatrix", model);
+    baseShader.updateUniform_vec4f("u_testColor", fic.get());
 
     ox::Renderer::beginBatch();
     for (size_t y = 0; y < m_windowHeight / tile_size.y; y++)
@@ -51,10 +56,6 @@ void TestApp::onRender(void)
     ox::Renderer::flush();
 }
 
-void TestApp::onUpdate(void)
-{
-    
-}
 
 void TestApp::onImGuiRender(void)
 {
@@ -62,7 +63,35 @@ void TestApp::onImGuiRender(void)
     ImGui::Begin("Controls");
         ImGui::LabelText("", "DrawCalls: %d", ox::Renderer::getRenderStats().drawCalls);
         ImGui::LabelText("", "Quads: %d", ox::Renderer::getRenderStats().quadCount);
-        ImGui::LabelText("", "FPS: %f", fps);
+        ImGui::LabelText("", "FPS: %d", getFps());
         ImGui::DragFloat2("Quad Size", (float*)(&tile_size), 1, 1, 64);
     ImGui::End();
+}
+
+void TestApp::onKeyPressed(const ox::KeyEvent& evt)
+{
+    OX_INFO("Key Pressed %d", evt.key);
+}
+
+void TestApp::onKeyReleased(const ox::KeyEvent& evt)
+{
+    OX_INFO("Key Released %d", evt.key);
+}
+
+void TestApp::onMousePressed(const ox::MouseButtonEvent& evt)
+{
+    if (evt.button == ox::tMouseButtons::Left)
+        OX_INFO("Mouse Pressed X: %d, Y: %d", evt.x, evt.y);
+    else if (evt.button == ox::tMouseButtons::Right)
+        OX_INFO("%s", evt.app.getCustomData1().getTypeName().c_str());
+}
+
+void TestApp::onMouseReleased(const ox::MouseButtonEvent& evt)
+{
+    OX_INFO("Mouse Released X: %d, Y: %d", evt.x, evt.y);
+}
+
+void TestApp::onMouseMoved(const ox::MouseMovedEvent& evt)
+{
+    OX_INFO("Mouse Moved: %d, %d", evt.x, evt.y);
 }

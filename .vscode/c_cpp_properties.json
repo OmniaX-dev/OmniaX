@@ -7,11 +7,28 @@
                 "${workspaceRoot}/src",
                 "${workspaceRoot}/src/omniax/vendor/GLAD"
             ],
-            "defines": [],
+            "defines": [
+                "__DEBUG__"
+            ],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++20",
-            "intelliSenseMode": "linux-clang-x64"
+            "intelliSenseMode": "clang-x64"
+        },
+        {
+            "name": "win32",
+            "includePath": [
+                "${default}",
+                "${workspaceRoot}/src",
+                "${workspaceRoot}/src/omniax/vendor/GLAD"
+            ],
+            "defines": [
+                "__DEBUG__"
+            ],
+            "compilerPath": "C:\\Program Files\\LLVM\\bin\\clang.ece",
+            "cStandard": "c17",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "clang-x64"
         }
     ],
     "version": 4

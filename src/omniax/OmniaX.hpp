@@ -12,6 +12,7 @@
 #include <omniax/utils/Logger.hpp>
 #include <omniax/utils/Defines.hpp>
 #include <omniax/utils/Utils.hpp>
+#include <omniax/utils/DataFile.hpp>
 
 /** Core **/
 #include <omniax/core/Errors.hpp>
@@ -23,6 +24,7 @@
 
 /** Graphics **/
 #include <omniax/graphics/Texture.hpp>
+#include <omniax/graphics/Animator.hpp>
 
 /** C++ Standard Library **/
 #include <cmath>

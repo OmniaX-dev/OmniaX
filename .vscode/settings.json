@@ -1,5 +1,5 @@
 {
-	"C_Cpp.errorSquiggles": "Disabled",
+	"C_Cpp.errorSquiggles": "Enabled",
 	"files.associations": {
 		"array": "cpp",
 		"*.tcc": "cpp",
@@ -100,5 +100,23 @@
 		"minimap.background" : "#00150588",
 		"sideBar.background": "#000"
 	},
+	"todohighlight.isEnable": true,
+	"todohighlight.keywords": [
+		{
+			"text": "TODO:",
+			"color": "red",
+			"backgroundColor": "rgba(0, 0, 0, 0)"
+		},
+		{
+			"text": "INFO:",
+			"color": "blue",
+			"backgroundColor": "rgba(0, 0, 0, 0)"
+		},
+		{
+			"text": "HACK:",
+			"color": "purple",
+			"backgroundColor": "rgba(0, 0, 0, 0)"
+		}
+	],
 	"todo-tree.tree.scanMode": "workspace"
 }

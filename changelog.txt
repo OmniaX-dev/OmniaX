@@ -1,0 +1,11 @@
+Version 0.1.552:
+	Added default icon as a static resource
+	Added 4 Custom User Data 'slots' in the ox::Application class
+	Added first basic Window Event System
+	Added global signals system
+	Added fps counter to ox::Application 
+	Added enableVSync(...) method to ox::Application
+	Ported omnia::common::DataFile to ox::DataFile
+	Added <Animator.hpp> header:
+		Added ox::FrameInterpolator class, used to interpolate values per frame in an automated way
+		Added ox::FrameInterpolatorChain class, used to chain FrameInterpolator in order to create more complex animations

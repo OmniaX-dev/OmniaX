@@ -6,6 +6,7 @@ namespace ox
 {
 	VertexBuffer::~VertexBuffer(void)
 	{
+		if (isInvalid()) return;
 		uint32_t gl_id = getOpenGLID();
 		GLCall(glDeleteBuffers(1, &gl_id));
 	}
@@ -37,6 +38,7 @@ namespace ox
 
 	ElementBuffer::~ElementBuffer(void)
 	{
+		if (isInvalid()) return;
 		uint32_t gl_id = getOpenGLID();
 		GLCall(glDeleteBuffers(1, &gl_id));
 	}
@@ -93,6 +95,7 @@ namespace ox
 
 	VertexArray::~VertexArray(void)
 	{
+		if (isInvalid()) return;
 		uint32_t gl_id = getOpenGLID();
 		GLCall(glDeleteVertexArrays(1, &gl_id));
 	}

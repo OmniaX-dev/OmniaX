@@ -1,0 +1,79 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build and Run",
+            "linux": {
+                "command": "${workspaceFolder}/bin/make_and_run"
+            },
+            // "windows": { //TODO: Implement
+            //     "command": "${workspaceFolder}/engine/build.sh"
+            // },
+            "options": {
+                "cwd": "${workspaceFolder}/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Build",
+            "linux": {
+                "command": "make"
+            },
+            // "windows": { //TODO: Implement
+            //     "command": "${workspaceFolder}/engine/build.sh"
+            // },
+            "options": {
+                "cwd": "${workspaceFolder}/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Run",
+            // "windows": { //TODO: Implement
+            //     "command": "${workspaceFolder}/testbed/build.bat"
+            // },
+            "linux": {
+                "command": "${workspaceFolder}/bin/omniax-test"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Full rebuild",
+            // "windows": { //TODO: Implement
+            //     "command": "${workspaceFolder}/build-all.bat",
+            // },
+            "linux": {
+                "command": "${workspaceFolder}/compile",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        }
+    ],
+    "version": "2.0.0"
+}

@@ -2,7 +2,9 @@
 #include <omniax/utils/Logger.hpp>
 #include <omniax/core/Errors.hpp>
 #include <omniax/utils/Defines.hpp>
+#include <omniax/utils/Utils.hpp>
 #include <omniax/vendor/stb_image/stb_image.h>
+#include <omniax/static_resources/default_icon_64.hpp>
 
 namespace ox
 {
@@ -103,7 +105,10 @@ namespace ox
     int32_t Window::setWindowIcon(String path)
     {
         GLFWimage images[1]; 
-        images[0].pixels = stbi_load(path.c_str(), &images[0].width, &images[0].height, 0, 4);
+        if (StringEditor(path).trim().str() == "")
+            images[0].pixels = stbi_load_from_memory(default_icon_64.data, default_icon_64.size, &images[0].width, &images[0].height, 0, 4);
+        else
+            images[0].pixels = stbi_load(path.c_str(), &images[0].width, &images[0].height, 0, 4);
         if (images[0].pixels == nullptr)
         {
             ErrorHandler::pushError(Window::ERR_WINDOW_ICON_LOAD_FAILED);
@@ -114,6 +119,7 @@ namespace ox
         glfwSetWindowIcon(m_window, 1, images); 
         stbi_image_free(images[0].pixels);
         return OX_NO_ERROR;
+
     }
     
     void Window::framebuffer_size_callback(GLFWwindow* window, int32_t width, int32_t height)

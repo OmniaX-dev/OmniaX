@@ -44,6 +44,7 @@ namespace ox
 		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t_mode));
 
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_localData));
+		GLCall(glGenerateMipmap(GL_TEXTURE_2D));
 		//unbind();
 
 		m_dataStored = store_data;

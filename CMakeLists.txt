@@ -35,6 +35,7 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/StringEditor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/OutputHandlers.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Geometry.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/DataFile.cpp
 
     # Graphics
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/Color.cpp
@@ -50,6 +51,7 @@ list(APPEND sources
 
     # Runtime
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/runtime/Application.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/runtime/Signals.cpp
 )
 
 list(APPEND test_sources

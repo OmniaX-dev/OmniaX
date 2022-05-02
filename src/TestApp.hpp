@@ -3,6 +3,13 @@
 
 #include <omniax/OmniaX.hpp>
 #include <omniax/runtime/Application.hpp>
+#include <omniax/runtime/Signals.hpp>
+
+class TestObj : public ox::SignalRecieverObject
+{
+    public:
+        void handleSignal(ox::tSignal& signal) override;
+};
 
 class TestApp : public ox::Application
 {
@@ -12,6 +19,11 @@ class TestApp : public ox::Application
     void onRender(void) override;
     void onUpdate(void) override;
     void onImGuiRender(void) override;
+    void onKeyPressed(const ox::KeyEvent& evt) override;
+    void onKeyReleased(const ox::KeyEvent& evt) override;
+    void onMousePressed(const ox::MouseButtonEvent& evt) override;
+    void onMouseReleased(const ox::MouseButtonEvent& evt) override;
+    void onMouseMoved(const ox::MouseMovedEvent& evt) override;
 
 private:
     ox::Camera2D camera;
@@ -20,11 +32,12 @@ private:
     ox::Texture omniaxLogo_i;
     glm::mat4 model;
     ox::Vec2 tile_size { 16, 16 };
-    ox::Timer timer;
-    ox::Timer timer2;
-    uint64_t sum = 0;
-    uint64_t ms = 0;
-    float fps = 0;
+    ox::FrameInterpolator<ox::Color> colInterp1 { { 255, 0, 0 }, {0, 255, 0}, 60 };
+    ox::FrameInterpolator<ox::Color> colInterp2 { { 0, 255, 0 }, {0, 0, 255}, 60 };
+    ox::FrameInterpolator<ox::Color> colInterp3 { { 0, 0, 255 }, {255, 0, 0}, 60 };
+    ox::FrameInterpolatorChain<ox::Color> fic;
+
+    TestObj obj;
 };
 
 #endif
