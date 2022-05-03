@@ -1,3 +1,6 @@
+Version 0.1.557:
+	Added basic Windows support
+
 Version 0.1.552:
 	Added default icon as a static resource
 	Added 4 Custom User Data 'slots' in the ox::Application class

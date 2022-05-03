@@ -11,7 +11,8 @@ namespace ox
     {
         public:
             inline OrthoCamera(void) { invalidate(); }
-            inline OrthoCamera(float left, float right, float bottom, float top, float near = -1.0f, float far = 1.0f) { create(left, right, bottom, top, near, far); }
+            //inline OrthoCamera(float left, float right, float bottom, float top, float near = -1.0f, float far = 1.0f) { create(left, right, bottom, top, near, far); }
+            OrthoCamera(float left, float right, float bottom, float top, float near = -1.0f, float far = 1.0f);
             OrthoCamera& create(float left, float ight, float bottom, float top, float near = -1.0f, float far = 1.0f);
 
             inline const glm::vec3& getPosition(void) const { return m_position; }

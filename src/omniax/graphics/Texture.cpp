@@ -1,5 +1,8 @@
 #include "Texture.hpp"
 #include <omniax/core/Errors.hpp>
+#ifndef STB_IMAGE_IMPLEMENTATION
+	#define STB_IMAGE_IMPLEMENTATION
+#endif
 #include <omniax/vendor/stb_image/stb_image.h>
 #include <omniax/utils/Logger.hpp>
 

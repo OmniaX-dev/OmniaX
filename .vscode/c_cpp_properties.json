@@ -25,10 +25,10 @@
             "defines": [
                 "__DEBUG__"
             ],
-            "compilerPath": "C:\\Program Files\\LLVM\\bin\\clang.ece",
+            "compilerPath": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++20",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "${default}"
         }
     ],
     "version": 4

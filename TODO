@@ -4,3 +4,5 @@
 [ADD]: Implement setClipboardText/getClipboardText in ox::Utils class
 [ADD]: A way to format Strings (foreground/background colors) using custom format style (and then fix ox::ConsoleOutputHandler to check for formatted strings)
 [ADD]: Shader handling in ox::Renderer
+[FIX]: Include Directory generator (python)
+[FIX]: Probably ignore .vscode folder in git

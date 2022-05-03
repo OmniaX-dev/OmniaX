@@ -4,6 +4,11 @@
 
 namespace ox
 {
+    OrthoCamera::OrthoCamera(float left, float right, float bottom, float top, float near, float far)
+    {
+        create(left, right, bottom, top, near, far);
+    }
+
     OrthoCamera& OrthoCamera::create(float left, float right, float bottom, float top, float near, float far)
     {
         m_projection = glm::ortho(left, right, bottom, top, near, far);

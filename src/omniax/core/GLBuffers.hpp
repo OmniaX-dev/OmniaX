@@ -50,36 +50,38 @@ namespace ox
 		public:
 			inline VertexBufferLayout(void) : m_stride(0) {  }
 			template<typename T>
-			inline void push(uint32_t count) {  }
-			template<>
-			inline void push<float>(uint32_t count)
+			inline void push(uint32_t count)
 			{
-				m_elements.push_back({ GL_FLOAT, count, GL_FALSE });
-				m_stride += count * tVertexBufferElem::gl_typeToSize(GL_FLOAT);
-			}
-			template<>
-			inline void push<uint32_t>(uint32_t count)
-			{
-				m_elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
-				m_stride += count * tVertexBufferElem::gl_typeToSize(GL_UNSIGNED_INT);
-			}
-			template<>
-			inline void push<int32_t>(uint32_t count)
-			{
-				m_elements.push_back({ GL_INT, count, GL_FALSE });
-				m_stride += count * tVertexBufferElem::gl_typeToSize(GL_INT);
-			}
-			template<>
-			inline void push<uint8_t>(uint32_t count)
-			{
-				m_elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
-				m_stride += count * tVertexBufferElem::gl_typeToSize(GL_UNSIGNED_BYTE);
-			}
-			template<>
-			inline void push<int8_t>(uint32_t count)
-			{
-				m_elements.push_back({ GL_BYTE, count, GL_TRUE });
-				m_stride += count * tVertexBufferElem::gl_typeToSize(GL_BYTE);
+				if constexpr(std::is_same_v<T, float>)
+				{
+					m_elements.push_back({ GL_FLOAT, count, GL_FALSE });
+					m_stride += count * tVertexBufferElem::gl_typeToSize(GL_FLOAT);
+				}
+				else if constexpr(std::is_same_v<T, uint32_t>)
+				{
+					m_elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
+					m_stride += count * tVertexBufferElem::gl_typeToSize(GL_UNSIGNED_INT);
+				}
+				else if constexpr(std::is_same_v<T, int32_t>)
+				{
+					m_elements.push_back({ GL_INT, count, GL_FALSE });
+					m_stride += count * tVertexBufferElem::gl_typeToSize(GL_INT);
+				}
+				else if constexpr(std::is_same_v<T, uint8_t>)
+				{
+					m_elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
+					m_stride += count * tVertexBufferElem::gl_typeToSize(GL_UNSIGNED_BYTE);
+				}
+				else if constexpr(std::is_same_v<T, int8_t>)
+				{
+					m_elements.push_back({ GL_BYTE, count, GL_TRUE });
+					m_stride += count * tVertexBufferElem::gl_typeToSize(GL_BYTE);
+				}
+				else
+				{
+					//TODO: Add error (warning)
+					return;
+				}
 			}
 			inline uint32_t getStride(void) const { return m_stride; }
 			inline const std::vector<tVertexBufferElem>& getElements(void) const { return m_elements; }

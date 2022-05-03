@@ -41,8 +41,9 @@ def install_includes(source_dir, include_dir, exception_dirs):
 	os.mkdir(include_dir)
 
 	for elem in _list[0]:
-		elem = elem[len(source_dir):]
-		elem = include_dir + "/" + elem
+		elem = elem[len(source_dir) + 1:]
+		elem = os.path.join(include_dir, elem)
+		#elem = include_dir + "/" + elem
 		os.mkdir(elem)
 		if verbose:
 			print("Creating Directory: " + elem)
@@ -51,7 +52,8 @@ def install_includes(source_dir, include_dir, exception_dirs):
 		print("\n")
 
 	for elem in _list[1]:
-		new_elem = include_dir + "/" + elem[len(source_dir):]
+		#new_elem = include_dir + "/" + elem[len(source_dir):]
+		new_elem = os.path.join(include_dir, elem[len(source_dir) + 1:])
 		found = True
 		if elem.endswith(".c") or elem.endswith(".cpp"):
 			found = False
@@ -68,8 +70,11 @@ def install_includes(source_dir, include_dir, exception_dirs):
 if __name__ == "__main__":
 	if len(sys.argv) > 1 and sys.argv[1] == "--verbose":
 		verbose = True
-	src_dir = "./src/omniax/"
-	inc_dir = "./Build/include"
-	excep_dirs = [inc_dir + "/vendor/GLAD", inc_dir + "/vendor/glm"]
+	#src_dir = "./src/omniax/"
+	#inc_dir = "./Build/include"
+	#excep_dirs = [inc_dir + "/vendor/GLAD", inc_dir + "/vendor/glm"]
+	src_dir = os.path.join(".", "src", "omniax")
+	inc_dir = os.path.join(".", "Build", "include")
+	excep_dirs = [os.path.join(inc_dir, "vendor", "GLAD"), os.path.join(inc_dir, "vendor", "glm")]
 	install_includes(src_dir, inc_dir, excep_dirs)
     

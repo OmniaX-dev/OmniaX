@@ -65,6 +65,18 @@ add_executable(omniax-test ${test_sources})
 add_compile_options(-m32 -MMD -MP -Wall -ggdb)
 target_compile_definitions(omniax PUBLIC __DEBUG__ __APP_NAME__=\"${PROJ_NAME}\" __BUILD_NUMBER__=${BUILD_NUMBER} __MAJOR_VER__=${MAJOR_VER} __MINOR_VER__=${MINOR_VER})
 target_include_directories(omniax-test PUBLIC ${include_dirs})
+
+target_link_libraries(omniax opengl32)
+
+if (WIN32)
+  find_library(GLFW_LIB
+      NAMES glfw3
+      HINTS "c:\\msys64\\ming64\\lib" #//TODO: Generalize this
+    NO_CACHE
+  )
+  target_link_libraries(omniax ${GLFW_LIB})
+endif (WIN32)
+
 target_include_directories(omniax PUBLIC ${include_dirs})
 if (UNIX)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")

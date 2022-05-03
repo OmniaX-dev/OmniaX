@@ -8,11 +8,11 @@
    #define GLCall( x ) \
      ox::ErrorHandler::__gl_clearErrors(); \
      x; \
-     if ( ox::ErrorHandler::__gl_printError( #x, __FILE__, __LINE__) ) __builtin_debugtrap();
+     if ( ox::ErrorHandler::__gl_printError( #x, __FILE__, __LINE__) ) __builtin_trap();
    #define GLCallRV( x ) [&]() { \
      ox::ErrorHandler::__gl_clearErrors(); \
      auto retVal = x; \
-     if ( ox::ErrorHandler::__gl_printError( #x, __FILE__, __LINE__) ) __builtin_debugtrap(); \
+     if ( ox::ErrorHandler::__gl_printError( #x, __FILE__, __LINE__) ) __builtin_trap(); \
      return retVal; \
    }()
 #else

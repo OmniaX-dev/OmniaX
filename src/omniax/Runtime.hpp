@@ -19,8 +19,6 @@
 **/
 
 #include <omniax/runtime/Application.hpp>
-#define STB_IMAGE_IMPLEMENTATION
-#include <omniax/vendor/stb_image/stb_image.h>
 #include <omniax/OmniaX.hpp>
 
 #endif
