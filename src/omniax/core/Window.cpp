@@ -21,13 +21,24 @@ namespace ox
     int32_t Window::create(int32_t width, int32_t height, String title, int32_t gl_major_version_hint, int32_t gl_minor_version_hint, int32_t gl_profile)
     {
         glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_major_version_hint);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_minor_version_hint);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, gl_profile);
-        m_gl_minVer = gl_minor_version_hint;
-        m_gl_majVer = gl_major_version_hint;
-        m_gl_profile = gl_profile;
-        m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+        int32_t glmaj = 4;
+        int32_t glmin = 6;
+        m_window = nullptr;
+        for (int32_t maj = glmaj; maj >= gl_major_version_hint; maj--)
+        {
+            for (int32_t min = glmin; min >= gl_minor_version_hint; min--)
+            {
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, maj);
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, min);
+                glfwWindowHint(GLFW_OPENGL_PROFILE, gl_profile);
+                m_gl_profile = gl_profile;
+                m_gl_minVer = min;
+                m_gl_majVer = maj;
+                m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+                if (m_window != nullptr)
+                    break;
+            }
+        }
         if (m_window == nullptr)
         {
             ErrorHandler::pushError(Window::ERR_GLFW_WINDOW_FAILED);

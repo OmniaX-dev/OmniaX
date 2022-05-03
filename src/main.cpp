@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 	// tdf.load("res/icons.dat");
 
 	TestApp app;
-	app.create(Width, Height, "OmniaX - Test");
+	app.create(Width, Height, "OmniaX - Test", "", 4, 0);
 	/** Game Loop **/
 	while (app.isRunning())
 	{
