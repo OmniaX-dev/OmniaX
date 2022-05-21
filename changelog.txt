@@ -1,3 +1,9 @@
+Version 0.1.643:
+	Added ox::ResourceManager static class
+	ox::Renderer now can handle multiple Shaders
+	Added Texture Atlas functionality to ox::Texture class
+	Started Work on serialization
+
 Version 0.1.560:
 	Added automatic highest supported openGL version detection
 

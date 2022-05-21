@@ -85,5 +85,29 @@ namespace ox
 	{
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 	}
+
+	TextureAtlasIndex Texture::addTileInfo(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
+	{
+		if (isInvalid() || x + w > m_width || y + h > m_height) return Texture::FullTextureCoords; //TODO: Error
+		if (!hasTileData())
+			m_tiles.push_back(tTexCoords());
+		Vec2 bottomLeft = { (float)x / (float)m_width, 1.0f - ((float)(y + h) / (float)m_height) };
+		Vec2 bottomRight = { (float)(x + w) / (float)m_width, 1.0f - ((float)(y + h) / (float)m_height) };
+		Vec2 topLeft = { (float)x / (float)m_width, 1.0f - ((float)y / (float)m_height) };
+		Vec2 topRight = { (float)(x + w) / (float)m_width, 1.0f - ((float)y / (float)m_height) };
+		tTexCoords texc;
+		texc.bottomLeft = bottomLeft;
+		texc.bottomRight = bottomRight;
+		texc.topLeft = topLeft;
+		texc.topRight = topRight;
+		m_tiles.push_back(texc);
+		return m_tiles.size() - 1;
+	}
+
+	Texture::tTexCoords Texture::getTile(TextureAtlasIndex index)
+	{
+		if (!hasTileData() || index >= m_tiles.size()) return Texture::tTexCoords(); //TODO: Warning
+		return m_tiles[index];
+	}
 	
 }

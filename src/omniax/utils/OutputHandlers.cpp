@@ -20,45 +20,45 @@ namespace ox
 		}
 
 		//RED
-		if (cse.str() == "red") std::cout << termcolor::red;
-		else if (cse.str() == "b-red") std::cout << termcolor::bright_red;
-		else if (cse.str() == "o-red") std::cout << termcolor::on_red;
-		else if (cse.str() == "ob-red") std::cout << termcolor::on_bright_red;
+		if (cse.str() == ConsoleCol::Red) std::cout << termcolor::red;
+		else if (cse.str() == ConsoleCol::BrightRed) std::cout << termcolor::bright_red;
+		else if (cse.str() == ConsoleCol::OnRed) std::cout << termcolor::on_red;
+		else if (cse.str() == ConsoleCol::OnBrightRed) std::cout << termcolor::on_bright_red;
 		//GREEN
-		else if (cse.str() == "green") std::cout << termcolor::green;
-		else if (cse.str() == "b-green") std::cout << termcolor::bright_green;
-		else if (cse.str() == "o-green") std::cout << termcolor::on_green;
-		else if (cse.str() == "ob-green") std::cout << termcolor::on_bright_green;
+		else if (cse.str() == ConsoleCol::Green) std::cout << termcolor::green;
+		else if (cse.str() == ConsoleCol::BrightGreen) std::cout << termcolor::bright_green;
+		else if (cse.str() == ConsoleCol::OnGreen) std::cout << termcolor::on_green;
+		else if (cse.str() == ConsoleCol::OnBrightGreen) std::cout << termcolor::on_bright_green;
 		//BLUE
-		else if (cse.str() == "blue") std::cout << termcolor::blue;
-		else if (cse.str() == "b-blue") std::cout << termcolor::bright_blue;
-		else if (cse.str() == "o-blue") std::cout << termcolor::on_blue;
-		else if (cse.str() == "ob-blue") std::cout << termcolor::on_bright_blue;
+		else if (cse.str() == ConsoleCol::Blue) std::cout << termcolor::blue;
+		else if (cse.str() == ConsoleCol::BrightBlue) std::cout << termcolor::bright_blue;
+		else if (cse.str() == ConsoleCol::OnBlue) std::cout << termcolor::on_blue;
+		else if (cse.str() == ConsoleCol::OnBrightBlue) std::cout << termcolor::on_bright_blue;
 		//MAGENTA
-		else if (cse.str() == "magenta") std::cout << termcolor::magenta;
-		else if (cse.str() == "b-magenta") std::cout << termcolor::bright_magenta;
-		else if (cse.str() == "o-magenta") std::cout << termcolor::on_magenta;
-		else if (cse.str() == "ob-magenta") std::cout << termcolor::on_bright_magenta;
+		else if (cse.str() == ConsoleCol::Magenta) std::cout << termcolor::magenta;
+		else if (cse.str() == ConsoleCol::BrightMagenta) std::cout << termcolor::bright_magenta;
+		else if (cse.str() == ConsoleCol::OnMagenta) std::cout << termcolor::on_magenta;
+		else if (cse.str() == ConsoleCol::OnBrightMagenta) std::cout << termcolor::on_bright_magenta;
 		//CYAN
-		else if (cse.str() == "cyan" || cse.str() == "aqua") std::cout << termcolor::cyan;
-		else if (cse.str() == "b-cyan") std::cout << termcolor::bright_cyan;
-		else if (cse.str() == "o-cyan" || cse.str() == "o-cyan") std::cout << termcolor::on_cyan;
-		else if (cse.str() == "ob-cyan") std::cout << termcolor::on_bright_cyan;
+		else if (cse.str() == ConsoleCol::Cyan || cse.str() == "aqua") std::cout << termcolor::cyan;
+		else if (cse.str() == ConsoleCol::BrightCyan) std::cout << termcolor::bright_cyan;
+		else if (cse.str() == ConsoleCol::OnCyan || cse.str() == "o-aqua") std::cout << termcolor::on_cyan;
+		else if (cse.str() == ConsoleCol::OnBrightCyan) std::cout << termcolor::on_bright_cyan;
 		//YELLOW
-		else if (cse.str() == "yellow") std::cout << termcolor::yellow;
-		else if (cse.str() == "b-yellow") std::cout << termcolor::bright_yellow;
-		else if (cse.str() == "o-yellow") std::cout << termcolor::on_yellow;
-		else if (cse.str() == "ob-yellow") std::cout << termcolor::on_bright_yellow;
+		else if (cse.str() == ConsoleCol::Yellow) std::cout << termcolor::yellow;
+		else if (cse.str() == ConsoleCol::BrightYellow) std::cout << termcolor::bright_yellow;
+		else if (cse.str() == ConsoleCol::OnYellow) std::cout << termcolor::on_yellow;
+		else if (cse.str() == ConsoleCol::OnBrightYellow) std::cout << termcolor::on_bright_yellow;
 		//GRAY
-		else if (cse.str() == "gray" || cse.str() == "black") std::cout << termcolor::grey;
-		else if (cse.str() == "b-gray") std::cout << termcolor::bright_grey;
-		else if (cse.str() == "o-gray" || cse.str() == "o-black") std::cout << termcolor::on_grey;
-		else if (cse.str() == "ob-gray") std::cout << termcolor::on_bright_grey;
+		else if (cse.str() == ConsoleCol::Black || cse.str() == "black") std::cout << termcolor::grey;
+		else if (cse.str() == ConsoleCol::BrightGray) std::cout << termcolor::bright_grey;
+		else if (cse.str() == ConsoleCol::OnBlack || cse.str() == "o-black") std::cout << termcolor::on_grey;
+		else if (cse.str() == ConsoleCol::OnBrightGray) std::cout << termcolor::on_bright_grey;
 		//WHITE
-		else if (cse.str() == "lgray") std::cout << termcolor::white;
-		else if (cse.str() == "white" || cse.str() == "b-lgray") std::cout << termcolor::bright_white;
-		else if (cse.str() == "o-lgray") std::cout << termcolor::on_white;
-		else if (cse.str() == "ob-lgray" || cse.str() == "o-white") std::cout << termcolor::on_bright_white;
+		else if (cse.str() == ConsoleCol::Gray) std::cout << termcolor::white;
+		else if (cse.str() == ConsoleCol::White || cse.str() == "b-lgray") std::cout << termcolor::bright_white;
+		else if (cse.str() == ConsoleCol::onGray) std::cout << termcolor::on_white;
+		else if (cse.str() == ConsoleCol::OnWhite || cse.str() == "o-white") std::cout << termcolor::on_bright_white;
 		else
 			OX_WARN("ox::ConsoleOutputHandler::col(ox::String): Unknown color string: %s", cse.c_str());
 		return *this;

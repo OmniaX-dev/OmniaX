@@ -1,0 +1,22 @@
+OXD File Structure
+
+(uint64) -> FILE SIZE IN BYTES
+
+(uint8) -> TYPE (= object), (uint64) -> OBJECT SIZE IN BYTES, (uint64) OID, BYTES (String) -> OBJECT NAME
+    (uint8) -> TYPE, [(uint64) -> SIZE], (stream) -> DATA
+    
+    
+
+Type List:
+=========================
+Basic Types: (size for theese is implicit)
+    BYTE (1 byte)
+    WORD (2 bytes)
+    DWORD (4 bytes)
+    QWORD (8 bytes)
+    FLOAT (4 bytes)
+    DOUBLE (8 bytes)
+Complex Types: (size must be specified as an uint64 after the type)
+    STREAM (n bytes + 8 bytes for size)
+    OBJECT (n bytes + 8 bytes for size)
+    ARRAY (n bytes + 8 bytes for element type + 8 bytes for size)

@@ -5,11 +5,19 @@
 #include <omniax/utils/Types.hpp>
 #include <omniax/vendor/GLAD/glad/glad.h>
 #include <omniax/utils/Defines.hpp>
+#include <omniax/utils/Geometry.hpp>
 
 namespace ox
 {
     class Texture : public BaseObject
     {
+        public: struct tTexCoords
+        {
+            Vec2 topLeft { 0.0f, 1.0f };
+            Vec2 topRight { 1.0f, 1.0f };
+            Vec2 bottomRight { 1.0f, 0.0f };
+            Vec2 bottomLeft { 0.0f, 0.0f };
+        };
         public:
             inline Texture(void) { invalidate(); }
             Texture(const String& path,
@@ -34,6 +42,9 @@ namespace ox
             inline int32_t getHeight(void) const { return m_height; }
             inline int32_t getBitsPerPixel(void) const { return m_bpp; }
             inline bool hasDataStored(void) const { return isValid() && m_dataStored; }
+            inline bool hasTileData(void) { return m_tiles.size() > 0; }
+            TextureAtlasIndex addTileInfo(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
+            tTexCoords getTile(TextureAtlasIndex index);
 
         private:
             String m_filePath;
@@ -42,10 +53,13 @@ namespace ox
             int32_t m_height { 0 };
             int32_t m_bpp { 0 };
             bool m_dataStored { false };
+            std::vector<tTexCoords> m_tiles;
 
         public:
             inline static constexpr int32_t ERR_IMAGE_LOAD_FAILED = OX_TEXTURE_ERR_MASK + 0x0001;
             inline static constexpr int32_t ERR_NO_DATA_STORED = OX_TEXTURE_ERR_MASK + 0x0002;
+
+            inline static constexpr TextureAtlasIndex FullTextureCoords = 0;
     };
 }
 

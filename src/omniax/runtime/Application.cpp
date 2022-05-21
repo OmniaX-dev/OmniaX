@@ -1,5 +1,5 @@
 #include "Application.hpp"
-#include <omniax/core/Renderer.hpp>
+#include <omniax/core/Renderer2D.hpp>
 #include <omniax/vendor/imgui/imgui.h>
 #include <omniax/vendor/imgui/imgui_impl_glfw.h>
 #include <omniax/vendor/imgui/imgui_impl_opengl3.h>
@@ -27,7 +27,7 @@ namespace ox
 		m_window.setWindowIcon(windowIconPath);
 
 		/** Subsystem initialization **/
-		ox::Renderer::init();
+		ox::Renderer2D::init();
 		SignalHandler::init();
 		/******************************/
 
@@ -62,7 +62,7 @@ namespace ox
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
-		ox::Renderer::shutdown();
+		ox::Renderer2D::shutdown();
 	}
 
 	void Application::nextFrame(void)
@@ -81,7 +81,7 @@ namespace ox
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ox::Renderer::resetStats();
+		ox::Renderer2D::resetStats();
 
 		onUpdate();
 		onRender();

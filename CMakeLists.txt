@@ -36,6 +36,7 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/OutputHandlers.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Geometry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/DataFile.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Serial.cpp
 
     # Graphics
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/Color.cpp
@@ -46,8 +47,9 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Errors.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Shader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/GLBuffers.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Renderer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Renderer2D.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/OrthoCamera.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/ResourceManager.cpp
 
     # Runtime
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/runtime/Application.cpp
@@ -66,9 +68,8 @@ add_compile_options(-m32 -MMD -MP -Wall -ggdb)
 target_compile_definitions(omniax PUBLIC __DEBUG__ __APP_NAME__=\"${PROJ_NAME}\" __BUILD_NUMBER__=${BUILD_NUMBER} __MAJOR_VER__=${MAJOR_VER} __MINOR_VER__=${MINOR_VER})
 target_include_directories(omniax-test PUBLIC ${include_dirs})
 
-target_link_libraries(omniax opengl32)
-
 if (WIN32)
+  target_link_libraries(omniax opengl32)
   find_library(GLFW_LIB
       NAMES glfw3
       HINTS "c:\\msys64\\ming64\\lib" #//TODO: Generalize this

@@ -3,12 +3,23 @@
 
 #include <omniax/OmniaX.hpp>
 #include <omniax/runtime/Application.hpp>
-#include <omniax/runtime/Signals.hpp>
 
-class TestObj : public ox::SignalRecieverObject
+#define NORTH 0
+#define SOUTH 1
+#define EAST 2
+#define WEST 3
+
+struct Cell
 {
-    public:
-        void handleSignal(ox::tSignal& signal) override;
+    bool exists { false };
+    uint32_t edge_index[4];
+    bool has_edge[4];
+};
+
+struct Edge
+{
+    ox::Vec2 start;
+    ox::Vec2 end;
 };
 
 class TestApp : public ox::Application
@@ -20,24 +31,20 @@ class TestApp : public ox::Application
     void onUpdate(void) override;
     void onImGuiRender(void) override;
     void onKeyPressed(const ox::KeyEvent& evt) override;
-    void onKeyReleased(const ox::KeyEvent& evt) override;
     void onMousePressed(const ox::MouseButtonEvent& evt) override;
-    void onMouseReleased(const ox::MouseButtonEvent& evt) override;
     void onMouseMoved(const ox::MouseMovedEvent& evt) override;
+
+    void createEdgeList(int32_t sx, int32_t sy, int32_t w, int32_t h, float blockWidth, int32_t pitch);
 
 private:
     ox::Camera2D camera;
-    ox::Shader baseShader;
-    ox::Texture omniaxLogo;
-    ox::Texture omniaxLogo_i;
+    ox::ResourceID baseShader;
     glm::mat4 model;
-    ox::Vec2 tile_size { 16, 16 };
-    ox::FrameInterpolator<ox::Color> colInterp1 { { 255, 0, 0 }, {0, 255, 0}, 60 };
-    ox::FrameInterpolator<ox::Color> colInterp2 { { 0, 255, 0 }, {0, 0, 255}, 60 };
-    ox::FrameInterpolator<ox::Color> colInterp3 { { 0, 0, 255 }, {255, 0, 0}, 60 };
-    ox::FrameInterpolatorChain<ox::Color> fic;
-
-    TestObj obj;
+    ox::Vec2 tile_size { 32, 32 };
+    std::vector<Cell> world;
+    const uint32_t worldWidth { 40 };
+    const uint32_t worldHeight { 30 };
+    std::vector<Edge> edges;
 };
 
 #endif

@@ -102,22 +102,22 @@ namespace ox
 
 
 		//===================== Operators ======================
-		inline bool  operator==(const Vec2& op2 ) 		{ return (x == op2.x && y == op2.y); }
-		inline bool  operator!=(const Vec2& op2 ) 		{ return (x != op2.x && y != op2.y); }
-		inline Vec2  operator+ (const Vec2& op2 ) 		{ return add(op2); }
-		inline Vec2  operator- (const Vec2& op2 ) 		{ return sub(op2); }
-		inline Vec2  operator+ (const float& op2) 		{ return add(op2, op2); }
-		inline Vec2  operator- (const float& op2) 		{ return sub(op2, op2); }
-		inline Vec2  operator* (const float& op2) 		{ return mul(op2); }
-		inline Vec2  operator/ (const float& op2) 		{ return div(op2); }
-		inline Vec2& operator= (const Vec2& val ) 		{ return set(val); }
-		inline Vec2& operator= (const float& val) 		{ return set(val, val); }
-		inline Vec2& operator+=(const Vec2& op2 ) 		{ return addm(op2); }
-		inline Vec2& operator-=(const Vec2& op2 ) 		{ return subm(op2); }
-		inline Vec2& operator+=(const float& op2) 		{ return addm(op2, op2); }
-		inline Vec2& operator-=(const float& op2) 		{ return subm(op2, op2); }
-		inline Vec2& operator*=(const float& op2) 		{ return mulm(op2); }
-		inline Vec2& operator/=(const float& op2) 		{ return divm(op2); }
+		inline bool  operator==(const Vec2& op2 ) 	const	{ return (x == op2.x && y == op2.y); }
+		inline bool  operator!=(const Vec2& op2 ) 	const	{ return (x != op2.x && y != op2.y); }
+		inline Vec2  operator+ (const Vec2& op2 ) 	const	{ return add(op2); }
+		inline Vec2  operator- (const Vec2& op2 ) 	const	{ return sub(op2); }
+		inline Vec2  operator+ (const float& op2) 	const	{ return add(op2, op2); }
+		inline Vec2  operator- (const float& op2) 	const	{ return sub(op2, op2); }
+		inline Vec2  operator* (const float& op2) 	const	{ return mul(op2); }
+		inline Vec2  operator/ (const float& op2) 	const	{ return div(op2); }
+		inline Vec2& operator= (const Vec2& val ) 			{ return set(val); }
+		inline Vec2& operator= (const float& val) 			{ return set(val, val); }
+		inline Vec2& operator+=(const Vec2& op2 ) 			{ return addm(op2); }
+		inline Vec2& operator-=(const Vec2& op2 ) 			{ return subm(op2); }
+		inline Vec2& operator+=(const float& op2) 			{ return addm(op2, op2); }
+		inline Vec2& operator-=(const float& op2) 			{ return subm(op2, op2); }
+		inline Vec2& operator*=(const float& op2) 			{ return mulm(op2); }
+		inline Vec2& operator/=(const float& op2) 			{ return divm(op2); }
 
 		friend std::ostream& operator<<(std::ostream& out, const Vec2& val);
 		//======================================================
@@ -141,6 +141,7 @@ namespace ox
 			y = yy;
 			z = zz;
 		}
+		inline Vec3(const Vec2& xy, float _z = 0.0f) { x = xy.x; y = xy.y; z = _z; }
 		inline Vec2 xy(void) const { return Vec2(x, y); }
 		inline Vec2 yz(void) const { return Vec2(y, z); }
 		inline Vec2 zx(void) const { return Vec2(z, x); }

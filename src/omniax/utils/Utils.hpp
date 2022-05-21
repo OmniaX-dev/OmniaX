@@ -121,6 +121,7 @@ namespace ox
 			IOutputHandler* m_dest;
 	};
 
+	class IOutputHandler;
 	class Utils
 	{
 		public:
@@ -141,6 +142,7 @@ namespace ox
 			static float get_rand_float(float min = 0.0f, float max = 1.0f);
 			static float map_value(float input, float input_start, float input_end, float output_start, float output_end);
 			static bool loadFileFromHppResource(String output_file_path, const char* resource_buffer, unsigned int size);
+			static void printByteStream(const ByteStream& data, StreamIndex start, uint8_t line_len, uint16_t n_rows, IOutputHandler& out);
 
 		private:
 			inline static uint64_t s_startTime_ms;
@@ -242,6 +244,49 @@ namespace ox
 
 		private:
 			String m_data;
+	};
+
+	struct ConsoleCol
+	{
+		inline static constexpr const char* Red = "red";
+		inline static constexpr const char* BrightRed = "b-red";
+		inline static constexpr const char* OnRed = "o-red";
+		inline static constexpr const char* OnBrightRed = "ob-red";
+		
+		inline static constexpr const char* Green = "green";
+		inline static constexpr const char* BrightGreen = "b-green";
+		inline static constexpr const char* OnGreen = "o-green";
+		inline static constexpr const char* OnBrightGreen = "ob-green";
+		
+		inline static constexpr const char* Blue = "blue";
+		inline static constexpr const char* BrightBlue = "b-blue";
+		inline static constexpr const char* OnBlue = "o-blue";
+		inline static constexpr const char* OnBrightBlue = "ob-blue";
+		
+		inline static constexpr const char* Magenta = "magenta";
+		inline static constexpr const char* BrightMagenta = "b-magenta";
+		inline static constexpr const char* OnMagenta = "o-magenta";
+		inline static constexpr const char* OnBrightMagenta = "ob-magenta";
+		
+		inline static constexpr const char* Cyan = "cyan";
+		inline static constexpr const char* BrightCyan = "b-cyan";
+		inline static constexpr const char* OnCyan = "o-cyan";
+		inline static constexpr const char* OnBrightCyan = "ob-cyan";
+		
+		inline static constexpr const char* Yellow = "yellow";
+		inline static constexpr const char* BrightYellow = "b-yellow";
+		inline static constexpr const char* OnYellow = "o-yellow";
+		inline static constexpr const char* OnBrightYellow = "ob-yellow";
+		
+		inline static constexpr const char* Black = "gray";
+		inline static constexpr const char* BrightGray = "b-gray";
+		inline static constexpr const char* OnBlack = "o-gray";
+		inline static constexpr const char* OnBrightGray = "ob-gray";
+		
+		inline static constexpr const char* Gray = "lgray";
+		inline static constexpr const char* White = "white";
+		inline static constexpr const char* onGray = "o-lgray";
+		inline static constexpr const char* OnWhite = "ob-lgray";
 	};
 
 	class Color;

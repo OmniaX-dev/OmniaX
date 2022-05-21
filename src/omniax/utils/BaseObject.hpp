@@ -16,8 +16,8 @@ namespace ox
 			virtual inline uint64_t getID(void) const { return m_uid; }
 			virtual inline void setID(uint64_t id) { m_uid = id; }
 			
-			virtual inline bool isValid(void) const { return m_valid || m_oid == 0; }
-			virtual inline bool isInvalid(void) const { return !isValid(); }
+			virtual inline bool isValid(void) const { return !isInvalid(); }
+			virtual inline bool isInvalid(void) const { return !m_valid || m_oid == 0; }
 			virtual inline void invalidate(void) { m_valid = false; }
 			virtual inline void validate(void) { m_valid = true; }
 			virtual inline void setValid(bool valid) { m_valid = valid; }

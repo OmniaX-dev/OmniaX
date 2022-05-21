@@ -97,7 +97,7 @@ namespace ox
 			VertexArray(bool init = true);
 			~VertexArray(void);
 			VertexArray& create(void);
-			uint32_t addBuffer( VertexBuffer& vbo, const VertexBufferLayout& layout);
+			uint32_t addBuffer(VertexBuffer& vbo, const VertexBufferLayout& layout);
 			void setElementBuffer(const ElementBuffer& ebo);
 			void bind(void) const;
 			void unbind(void) const;

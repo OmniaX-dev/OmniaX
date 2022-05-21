@@ -1,0 +1,36 @@
+#version 420 core
+
+
+@shader_type [vertex]
+/** ============================================================[ Vertex Shader ]============================================================ **/
+    layout(location = 0) in vec3    a_position;
+    layout(location = 1) in vec4    a_color;
+    layout(location = 2) in vec2    a_texCoords;
+    layout(location = 3) in float   a_texIndex;
+
+    out vec4     v_vertexColor;
+
+    uniform mat4     u_modelMatrix;
+    uniform mat4     u_viewProjMatrix;
+
+    void main()
+    {
+        gl_Position = u_viewProjMatrix * u_modelMatrix * vec4(a_position, 1.0);
+        v_vertexColor = a_color;
+    }
+/** ========================================================================================================================================= **/
+
+
+
+
+@shader_type [fragment]
+/** ===========================================================[ Fragment Shader ]=========================================================== **/
+    out vec4 out_FragColor;
+
+    in vec4 v_vertexColor;
+
+    void main()
+    {
+        out_FragColor = v_vertexColor;
+    }
+/** ========================================================================================================================================= **/

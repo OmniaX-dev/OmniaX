@@ -675,4 +675,67 @@ namespace ox
 		bin.close();
 		return true;
 	}
+
+	void Utils::printByteStream(const ByteStream& data, StreamIndex start, uint8_t line_len, uint16_t n_rows, IOutputHandler& out)
+	{
+		StreamIndex end = start + (n_rows * line_len);
+		if (end > data.size()) end = data.size();
+		uint8_t i = 1;
+		ByteStream tmp;
+		uint16_t linew = 1 + 1 + 6 + 1 + 1 + 2 + ((2 + 2) * line_len) + 1 + 4;
+		out.col(ConsoleCol::BrightBlue).p(Utils::duplicateChar('=', linew)).nl();
+		out.col(ConsoleCol::BrightBlue).p("| ");
+		out.col(ConsoleCol::BrightGray).p("0x");
+		out.col(ConsoleCol::BrightCyan).p(Utils::getHexStr(start, false, 4)).col(ConsoleCol::BrightBlue).p(" |  ");
+		// std::cout << termcolor::bright_blue << Utils::duplicateChar('=', linew) << "\n";
+		// std::cout << termcolor::bright_blue << "| ";
+		// std::cout << termcolor::bright_grey << "0x";
+		// std::cout << termcolor::bright_cyan << Utils::getHexStr(start, false, 4) << termcolor::bright_blue << " |  ";
+		for (StreamIndex addr = start; addr < end; addr++)
+		{
+			tmp.push_back(data[addr]);
+			if (data[addr] == 0)
+				out.col(ConsoleCol::BrightGray);
+				//std::cout << termcolor::bright_grey;
+			else
+				out.col(ConsoleCol::White);
+				//std::cout << termcolor::bright_white;
+			//std::cout << Utils::getHexStr(data[addr], false) << "  ";
+			out.p(Utils::getHexStr(data[addr], false)).p("  ");
+			if (i++ % line_len == 0 || addr == end - 1)
+			{
+				i = 1;
+				//std::cout << termcolor::bright_blue << "|";
+				out.col(ConsoleCol::BrightBlue).p("|");
+				if (addr == end - 1) break;
+				out.nl();
+				out.col(ConsoleCol::BrightBlue).p("|");
+				out.col(ConsoleCol::BrightGray).p("  --------  ").col(ConsoleCol::BrightBlue).p("|").col(ConsoleCol::BrightGray).p("  ");
+				//std::cout << "\n";
+				//std::cout << termcolor::bright_blue << "|";
+				//std::cout << termcolor::bright_grey << "  --------  " << termcolor::bright_blue << "|" << termcolor::bright_grey << "  ";
+				for (const auto& c : tmp)
+				{
+					//if (isprint(c)) std::cout << termcolor::bright_yellow << (char)c << termcolor::bright_grey << "   ";
+					if (isprint(c)) out.col(ConsoleCol::BrightYellow).p((char)c).col(ConsoleCol::BrightGray).p("   ");
+					else out.col(ConsoleCol::BrightGray).p(".   ");
+					//else std::cout << termcolor::bright_grey << ".   ";
+				}
+				out.col(ConsoleCol::BrightBlue).p("| ");
+				//std::cout << termcolor::bright_blue << "|";
+				tmp.clear();
+				out.reset().nl();
+				out.col(ConsoleCol::BrightBlue).p("| ");
+				out.col(ConsoleCol::BrightGray).p("0x");
+				out.col(ConsoleCol::BrightCyan).p(Utils::getHexStr(addr + 1, false, 4)).col(ConsoleCol::BrightBlue).p(" |  ");
+				//std::cout << termcolor::reset;
+				//std::cout << "\n";
+				// std::cout << termcolor::bright_blue << "| ";
+				// std::cout << termcolor::bright_grey << "0x";
+				// std::cout << termcolor::bright_cyan << Utils::getHexStr(addr + 1, false, 4) << termcolor::bright_blue << " |  ";
+			}
+		}
+		out.nl().col(ConsoleCol::BrightBlue).p(Utils::duplicateChar('=', linew)).nl().reset();
+		//std::cout << "\n" << termcolor::bright_blue << Utils::duplicateChar('=', linew) << "\n";
+	}
 } // namespace ox
