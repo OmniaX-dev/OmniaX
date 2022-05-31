@@ -7,6 +7,8 @@
 #include <omniax/utils/Logger.hpp>
 #include <omniax/core/Errors.hpp>
 #include <omniax/runtime/Signals.hpp>
+#include <omniax/core/ResourceManager.hpp>
+#include <omniax/core/Input.hpp>
 
 namespace ox
 {
@@ -29,6 +31,8 @@ namespace ox
 		/** Subsystem initialization **/
 		ox::Renderer2D::init();
 		SignalHandler::init();
+		ResourceManager::init();
+		Input::init(m_window.getGLFWWindowPtr());
 		/******************************/
 
 		m_windowWidth = windowWidth;

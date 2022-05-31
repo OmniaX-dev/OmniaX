@@ -1,12 +1,8 @@
 #include "Signals.hpp"
+#include <omniax/utils/BaseObject.hpp>
 
 namespace ox
 {
-	void SignalRecieverObject::connectSignal(uint32_t signal_id)
-	{
-		SignalHandler::connect(*this, signal_id);
-	}
-
 	void SignalHandler::init(void)
 	{
 		SignalHandler::m_customRecievers.clear();
@@ -65,7 +61,7 @@ namespace ox
 		}
 	}
 
-	void SignalHandler::connect(SignalRecieverObject& object, uint32_t signal_id)
+	void SignalHandler::connect(BaseObject& object, uint32_t signal_id)
 	{
 		if (signal_id == tBuiltinSignals::MousePressed)
 			m_mousePressedRecievers.push_back({ &object, signal_id });

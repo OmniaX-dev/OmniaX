@@ -1,6 +1,7 @@
 #include "BaseObject.hpp"
 #include "Utils.hpp"
 #include "Defines.hpp"
+#include <omniax/runtime/Signals.hpp>
 
 namespace ox
 {
@@ -26,5 +27,10 @@ namespace ox
 	std::string BaseObject::getObjectHeaderString(void) const
 	{
 		return StringEditor(getTypeName()).add("->uid=").addi(getID()).add("/oid=").addi(getCompareOID()).add("/valid=").add(STR_BOOL(isValid())).str();
+	}
+
+	void BaseObject::connectSignal(uint32_t signal_id)
+	{
+		SignalHandler::connect(*this, signal_id);
 	}
 } //namesoace ox

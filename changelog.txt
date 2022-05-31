@@ -1,3 +1,20 @@
+Version 0.1.1458:
+	Added ox::TileAnimation class
+	Added ox::Transform2D struct
+	ox::Renderer2D now handles transform for quads
+	Added ox::Input class:
+		Query state of keyboard keys
+		Query state of mouse buttons
+		Query state of Joystick buttons
+	Added ox::GameObject class
+	Added Particle Systems
+		Added Splines as paths to follow
+		Added ox::ParticleFactory class to generate particle system's
+	Added basic physiscs object
+	Added Bitmap Fonts
+	Added Text Renderer to ox::Renderer2D
+	Removed <Animator.hpp> header due to errors in it
+
 Version 0.1.643:
 	Added ox::ResourceManager static class
 	ox::Renderer now can handle multiple Shaders

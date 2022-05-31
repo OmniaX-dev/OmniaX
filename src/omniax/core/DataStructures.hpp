@@ -24,6 +24,15 @@ namespace ox
             return layout;
         }
     };
+
+    class Transform2D
+    {
+        public:
+            float rotation { 0.0f };
+            Vec2 translation { 0.0f, 0.0f };
+            Vec2 scale { 1.0f, 1.0f };
+            bool centeredOrigin { false };
+    };
 }
  
  #endif

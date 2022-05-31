@@ -1,8 +1,44 @@
-/** Utility **/
+/** ADD **/
 [ADD]: A way to render QuadTrees
 [ADD]: Port ox::RealTime (Utils) from sf::Clock to some other kind of clock (probably to ox::Timer) / (Maybe also rename RealTime to something else)
 [ADD]: Implement setClipboardText/getClipboardText in ox::Utils class
 [ADD]: A way to format Strings (foreground/background colors) using custom format style (and then fix ox::ConsoleOutputHandler to check for formatted strings)
 [ADD]: Shader handling in ox::Renderer
-[FIX]: Include Directory generator (python)
-[FIX]: Probably ignore .vscode folder in git
+[ADD]: Window enter/leave events
+[ADD]: Mouse Scrolled events
+[ADD]: Cursor handling
+[ADD]: Keys 'enum'
+[ADD]: Materials
+[ADD]: Better Random Class
+[ADD]: Delta Time 
+[ADD]: Text transform in ox::Renderer2D
+[ADD]: Combine Texture's ox::ResourceID with ox::TextureAtlasIndex in single struct
+[ADD]: Default bitmap font
+[ADD]: Handle Joystick connect/disconnect
+
+/** FIX **/
+[FIX]: Non-Constant speed on Spline
+[FIX]: Some characters not showing in ox::BitmapFont (ox::String str = "\"'-_.,"; //maybe more)
+
+/** DONE **/
+[***]: Include Directory generator (python)
+[***]: Remove ox::FrameInterpolator class because it doesn't work properly
+[***]: Input handling
+[***]: Transform class
+[***]: Particle System
+[***]:    Specialize some randoms to Vec2
+[***]:    Add multi-direction
+[***]:    Add ParticleInfo class?
+[***]:    Add color interpolation
+[***]:    Random Values should be in ParticleSystem class
+[***]:    Base parameters should be in ParticleSystem class
+[***]:    Add Random Tile Index
+[***]: Text Renderer to ox::Renderer2D
+[***]:    Way to get String bounds
+[***]: Implement ox::SignalRecieverObject's functionality into ox::BaseObject
+[***]: ghost resource when failed to load in ox::ResourceManager
+[***]: Find a way to map text height to scale in ox::Renderer2D::drawText(...)
+
+/** ABORTED **/
+[xxx]: Monospace option to ox::BitmapFont
+[xxx]: Probably ignore .vscode folder in git

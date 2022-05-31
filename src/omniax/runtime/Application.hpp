@@ -67,9 +67,9 @@ namespace ox
 			BaseObject* m_custom_data_3 = nullptr;
 			BaseObject* m_custom_data_4 = nullptr;
 
-			uint32_t m_rtfps;
-			uint32_t m_fps;
-			double m_prevTime;
+			uint32_t m_rtfps { 0 };
+			uint32_t m_fps { 0 };
+			double m_prevTime { 0.0 };
 
 		public:
 			inline static constexpr int32_t ERR_WINDOW_CREATE_FAIL = OX_APPLICATION_ERR_MASK + 0x0001;

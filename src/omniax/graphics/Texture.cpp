@@ -13,6 +13,11 @@ namespace ox
 		create(path, store_data, min_filter_mode, mag_filter_mode, wrap_s_mode, wrap_t_mode);;
 	}
 
+	Texture::Texture(int32_t width, int32_t height)
+	{
+		create(width, height);
+	}
+
 	Texture& Texture::create(const String& path, bool store_data, int32_t min_filter_mode, int32_t mag_filter_mode, int32_t wrap_s_mode, int32_t wrap_t_mode)
 	{
 		invalidate();
@@ -58,6 +63,39 @@ namespace ox
 		}
 
 		m_filePath = path;
+		setTypeName("ox::Texture");
+		validate();
+		return *this;
+	}
+
+	Texture& Texture::create(int32_t width, int32_t height)
+	{
+		invalidate();
+		if (m_localData != nullptr)
+		{
+			stbi_image_free(m_localData);
+			m_width = 0;
+			m_height = 0;
+			m_localData = nullptr;
+			m_filePath = "";
+			m_bpp = 0;
+			m_dataStored = false;
+			setID(0);
+		}
+		m_width = width;
+		m_height = height;
+		uint32_t gl_id;
+		GLCall(glGenTextures(1, &gl_id));
+		setID(gl_id);
+		bind();
+
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_localData));
+		GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+
 		setTypeName("ox::Texture");
 		validate();
 		return *this;

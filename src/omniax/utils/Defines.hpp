@@ -28,7 +28,7 @@
 	#define NULL 0
 #endif
 
-#define PI 3.1415926535898
+#define PI 3.1415926535898f
 #define TWO_PI PI * 2.0f
 #define HALF_PI PI / 2.0f
 #define QUARTER_PI PI / 4.0f

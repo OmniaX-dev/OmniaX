@@ -10,6 +10,7 @@ namespace ox
 	typedef std::string String;
 	typedef uint32_t ResourceID;
 	typedef uint32_t TextureAtlasIndex;
+	typedef uint8_t JoystickID;
 
 	typedef uint32_t StreamIndex;
 	typedef int64_t QWord;

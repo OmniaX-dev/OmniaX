@@ -21,9 +21,17 @@
 #include <omniax/core/Renderer2D.hpp>
 #include <omniax/core/DataStructures.hpp>
 #include <omniax/core/OrthoCamera.hpp>
+#include <omniax/core/Input.hpp>
+#include <omniax/core/GameObject.hpp>
+#include <omniax/core/Particles.hpp>
 
 /** Graphics **/
-#include <omniax/graphics/Animator.hpp>
+//#include <omniax/graphics/Animator.hpp>
+#include <omniax/graphics/TileAnimation.hpp>
+#include <omniax/graphics/BitmapFont.hpp>
+
+/** Physics **/
+#include <omniax/physics/PhysicsObject.hpp>
 
 /** C++ Standard Library **/
 #include <cmath>

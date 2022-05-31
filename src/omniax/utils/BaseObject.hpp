@@ -8,6 +8,7 @@
 namespace ox
 {
 	class IOutputHandler;
+	struct tSignal;
 	class BaseObject
 	{
 		public:
@@ -34,6 +35,9 @@ namespace ox
 			
 			virtual inline std::string toString(void) const { return getObjectHeaderString(); };
 			virtual void print(bool newLine = true, IOutputHandler* __destination = nullptr) const;
+
+			virtual inline void handleSignal(tSignal& signal) {  }
+			void connectSignal(uint32_t signal_id);
 			
 			friend std::ostream& operator<<(std::ostream& os, const BaseObject& obj);
 

@@ -12,12 +12,11 @@
     out vec2     v_texCoords;
     out float    v_texIndex;
 
-    uniform mat4     u_modelMatrix;
     uniform mat4     u_viewProjMatrix;
 
     void main()
     {
-        gl_Position = u_viewProjMatrix * u_modelMatrix * vec4(a_position, 1.0);
+        gl_Position = u_viewProjMatrix * vec4(a_position, 1.0);
         v_vertexColor = a_color;
         v_texCoords = a_texCoords;
         v_texIndex = a_texIndex;
@@ -31,7 +30,6 @@
 /** ===========================================================[ Fragment Shader ]=========================================================== **/
     out vec4 out_FragColor;
     uniform sampler2D u_textures[16];
-    uniform vec4 u_testColor;
 
     in vec4 v_vertexColor;
     in vec2 v_texCoords;
@@ -40,6 +38,7 @@
     void main()
     {
         int iTexID = int(v_texIndex);
-        out_FragColor = texture(u_textures[iTexID], v_texCoords) * v_vertexColor;
+        vec4 color = texture(u_textures[iTexID], v_texCoords) * v_vertexColor;
+        out_FragColor = color;
     }
 /** ========================================================================================================================================= **/

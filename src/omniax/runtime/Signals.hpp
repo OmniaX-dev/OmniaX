@@ -43,18 +43,11 @@ namespace ox
 		inline tSignal(uint32_t id, BaseObject& _userData = BaseObject::InvalidRef(), uint8_t prio = tSignalPriority::Normal) : priority(prio), ID(id), userData(_userData) {  }
 	};
 
-	class SignalRecieverObject : public BaseObject
-	{
-		public:
-			virtual void handleSignal(tSignal& signal) = 0;
-			void connectSignal(uint32_t signal_id);
-	};
-
 	class SignalHandler
 	{
 		private: struct tSignalObjPair
 		{
-			SignalRecieverObject* object { nullptr };
+			BaseObject* object { nullptr };
 			uint32_t signal_id { tBuiltinSignals::NoSignal };
 		};
 		private: struct tDelegateSignal
@@ -69,7 +62,7 @@ namespace ox
 			static void refresh(void);
 
 			static void emitSignal(uint32_t signal_id, uint8_t prio = tSignalPriority::Normal, BaseObject& userData = BaseObject::InvalidRef());
-			static void connect(SignalRecieverObject& object, uint32_t signal_id);
+			static void connect(BaseObject& object, uint32_t signal_id);
 
 		private:
 			inline static std::vector<tSignalObjPair> m_customRecievers;

@@ -13,6 +13,16 @@ namespace ox
 	class FrameInterpolator
 	{
 		public:
+			inline FrameInterpolator(void)
+			{
+				m_endFrame = 10;
+				m_loop = false;
+				m_backwards = false;
+				m_back = false;
+				m_currentFrame = -1;
+
+				m_valid = false;
+			}
 			inline FrameInterpolator(T startValue, T endValue, uint32_t length_in_frames = 60, bool loop = false, bool backwards = false)
 			{
 				if constexpr(std::is_same_v<T, float>) { }
@@ -136,6 +146,7 @@ namespace ox
 			inline void update(void)
 			{
 				if (m_interList.size() == 0 || isDone()) return;
+				std::cout << m_interList[m_currentInter]->isDone() << "\n";
 				if (m_interList[m_currentInter]->isDone())
 				{
 					m_interList[m_currentInter]->reset();

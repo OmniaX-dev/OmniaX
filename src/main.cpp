@@ -2,10 +2,10 @@
 #include <omniax/Runtime.hpp>
 #include "TestApp.hpp"
 
-constexpr int32_t Width = 32 * 40;
-constexpr int32_t Height = 32 * 30;
-// constexpr int32_t Width = 64 * 16;
-// constexpr int32_t Height = 64 * 9;
+// constexpr int32_t Width = 32 * 20;
+// constexpr int32_t Height = 32 * 20;
+constexpr int32_t Width = 64 * 16;
+constexpr int32_t Height = 64 * 9;
 
 class TestDataFile : public ox::DataFile
 {

@@ -15,20 +15,6 @@ namespace ox
 		inline static constexpr uint8_t MouseReleased = 4;
 		inline static constexpr uint8_t MouseMoved = 5;
 	}; 
-	struct tMouseButtons
-	{
-		inline static constexpr uint8_t Button1 = 0;
-		inline static constexpr uint8_t Button2 = 1;
-		inline static constexpr uint8_t Button3 = 2;
-		inline static constexpr uint8_t Button4 = 3;
-		inline static constexpr uint8_t Button5 = 4;
-		inline static constexpr uint8_t Button6 = 5;
-		inline static constexpr uint8_t Button7 = 6;
-		inline static constexpr uint8_t Button8 = 7;
-		inline static constexpr uint8_t Left = tMouseButtons::Button1;
-		inline static constexpr uint8_t Right = tMouseButtons::Button2;
-		inline static constexpr uint8_t Middle = tMouseButtons::Button3;
-	};
 	class Window;
 	class Application;
 	class Event : public BaseObject

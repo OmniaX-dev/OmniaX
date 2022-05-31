@@ -37,10 +37,17 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Geometry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/DataFile.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Serial.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Spline.cpp
 
     # Graphics
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/Color.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/Texture.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/TileAnimation.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/BitmapFont.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/RichString.cpp
+
+    # Physics
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/physics/PhysicsObject.cpp
     
     # Core
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Window.cpp
@@ -50,6 +57,9 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Renderer2D.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/OrthoCamera.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/ResourceManager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Input.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/GameObject.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Particles.cpp
 
     # Runtime
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/runtime/Application.cpp

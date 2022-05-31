@@ -3,7 +3,24 @@
 
 #include <omniax/OmniaX.hpp>
 #include <omniax/runtime/Application.hpp>
-#include <omniax/graphics/TileAnimation.hpp>
+
+#define NORTH 0
+#define SOUTH 1
+#define EAST 2
+#define WEST 3
+
+struct Cell
+{
+    bool exists { false };
+    uint32_t edge_index[4];
+    bool has_edge[4];
+};
+
+struct Edge
+{
+    ox::Vec2 start;
+    ox::Vec2 end;
+};
 
 class TestApp : public ox::Application
 {
@@ -15,28 +32,19 @@ class TestApp : public ox::Application
     void onImGuiRender(void) override;
     void onKeyPressed(const ox::KeyEvent& evt) override;
     void onMousePressed(const ox::MouseButtonEvent& evt) override;
-    void onMouseReleased(const ox::MouseButtonEvent& evt) override;
     void onMouseMoved(const ox::MouseMovedEvent& evt) override;
+
+    void createEdgeList(int32_t sx, int32_t sy, int32_t w, int32_t h, float blockWidth, int32_t pitch);
 
 private:
     ox::Camera2D camera;
-    ox::ResourceID defaultShader;
-    ox::TileAnimation anim;
-    ox::ResourceID playerTex;
-
-    ox::GameObject object;
-    int32_t current { 0 };
-    ox::ParticleEmitter snow;
-    ox::ParticleEmitter fire;
-    ox::ResourceID partTex;
-    std::vector<ox::TextureAtlasIndex> partTiles;
-
-    ox::ResourceID terrainTex;
-    ox::ResourceID skyTex;
-    ox::TextureAtlasIndex snowTile;
-    ox::TextureAtlasIndex logsTile;
-
-    ox::ResourceID notoBF;
+    ox::ResourceID baseShader;
+    glm::mat4 model;
+    ox::Vec2 tile_size { 32, 32 };
+    std::vector<Cell> world;
+    const uint32_t worldWidth { 40 };
+    const uint32_t worldHeight { 30 };
+    std::vector<Edge> edges;
 };
 
 #endif
