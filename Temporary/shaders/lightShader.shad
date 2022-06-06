@@ -1,0 +1,48 @@
+#version 420 core
+
+
+@shader_type [vertex]
+/** ============================================================[ Vertex Shader ]============================================================ **/
+    layout(location = 0) in vec3    a_position;
+    layout(location = 1) in vec4    a_color;
+    layout(location = 2) in vec2    a_texCoords;
+    layout(location = 3) in float   a_texIndex;
+
+    out vec4     v_vertexColor;
+    out vec2     v_texCoords;
+    out float    v_texIndex;
+
+    uniform mat4     u_viewProjMatrix;
+
+    void main()
+    {
+        gl_Position = u_viewProjMatrix * vec4(a_position, 1.0);
+        v_vertexColor = a_color;
+        v_texCoords = a_texCoords;
+        v_texIndex = a_texIndex;
+    }
+/** ========================================================================================================================================= **/
+
+
+
+
+@shader_type [fragment]
+/** ===========================================================[ Fragment Shader ]=========================================================== **/
+    out vec4 out_FragColor;
+    uniform sampler2D u_textures[16];
+    uniform int u_lightPasses;
+
+    in vec4 v_vertexColor;
+    in vec2 v_texCoords;
+    in float v_texIndex;
+
+    void main()
+    {
+        vec4 color = texture(u_textures[1], v_texCoords);
+        for (int i = 2; i <= u_lightPasses + 1; i++)
+        {
+            color *= texture(u_textures[i], v_texCoords);
+        }
+        out_FragColor = color;
+    }
+/** ========================================================================================================================================= **/

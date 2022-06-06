@@ -7,6 +7,7 @@
 #include <omniax/utils/BaseObject.hpp>
 #include <omniax/graphics/Color.hpp>
 #include <omniax/utils/Defines.hpp>
+#include <omniax/utils/Geometry.hpp>
 
 class GLFWwindow;
 namespace ox
@@ -30,6 +31,7 @@ namespace ox
 			void pollEvents(void);
 			void setCustomResizeCallback(fpCustomResizeCallback callback);
 			int32_t setWindowIcon(String path);
+			IPoint getSize(void);
 
 			inline int32_t gl_getMajorVersionHint(void) { return m_gl_majVer; }
 			inline int32_t gl_getMinorVersionHint(void) { return m_gl_minVer; }

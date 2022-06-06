@@ -5,6 +5,7 @@
 #include <omniax/utils/BaseObject.hpp>
 #include <omniax/vendor/GLAD/glad/glad.h>
 #include <omniax/utils/Defines.hpp>
+#include <omniax/utils/Logger.hpp>
 
 namespace ox
 {
@@ -79,7 +80,7 @@ namespace ox
 				}
 				else
 				{
-					//TODO: Add error (warning)
+					OX_WARN("Invalid template parameter in ox::VertexBufferLayout");
 					return;
 				}
 			}

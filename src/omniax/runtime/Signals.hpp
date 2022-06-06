@@ -22,6 +22,8 @@ namespace ox
 		inline static constexpr uint32_t MousePressed 			=	0x0003;
 		inline static constexpr uint32_t MouseReleased 			=	0x0004;
 		inline static constexpr uint32_t MouseMoved 			=	0x0005;
+
+		inline static constexpr uint32_t WindowResized 			=	0x1001;
 		/*********************/
 
 		inline static constexpr uint32_t CustomSignalBase 		=	0xFF0000;
@@ -74,11 +76,26 @@ namespace ox
 			inline static std::vector<tSignalObjPair> m_keyPressedRecievers;
 			inline static std::vector<tSignalObjPair> m_keyReleasedRecievers;
 			inline static std::vector<tSignalObjPair> m_mouseMovedRecievers;
+			inline static std::vector<tSignalObjPair> m_windowResizedRecievers;
 			/************************************/
 
 			inline static constexpr uint16_t __SIGNAL_BUFFER_START_SIZE { 128 };
 			inline static constexpr uint16_t __DELEGATED_SIGNALS_BUFFER_START_SIZE { 128 };
 	};
+	
+	class WindowSizeOnj : public BaseObject
+	{
+		public:
+			const int32_t width;
+			const int32_t height;
+
+			inline WindowSizeOnj(int32_t _w, int32_t _h) : width(_w), height(_h)
+			{
+				setTypeName("ox::WindowSizeObject");
+				validate();
+			}
+	};
+
 }
 
 #endif

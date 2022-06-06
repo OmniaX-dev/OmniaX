@@ -83,6 +83,10 @@
 		"shared_mutex": "cpp"
 	},
 
+	"git.enabled": false,
+    "git.path": null,
+    "git.autofetch": false,
+
 	"workbench.colorCustomizations": {
 		"editor.background": "#080808",
 		"tab.hoverBackground": "#111",
@@ -100,6 +104,18 @@
 		"minimap.background" : "#00150588",
 		"sideBar.background": "#000"
 	},
+	"customizeUI.stylesheet": {
+		":root": "--tab-height: 26px; --font-size-tab-title: 10px;",
+		".editor-actions": "height: var(--tab-height) !important; line-height: var(--tab-height) !important;",
+		".tabs-container": "height: unset !important;",
+		".tabs-container .tab": "height: var(--tab-height) !important; line-height: var(--tab-height) !important;",
+		".tabs-container .monaco-icon-label": "height: var(--tab-height) !important; line-height: var(--tab-height) !important; font-size: var(--font-size-tab-title) !important;",
+		".tabs-container .monaco-icon-label:before": "height: var(--tab-height) !important; line-height: var(--tab-height) !important;",
+		".tabs-container .tab-actions": "display: none !important;",
+		".tabs-container .monaco-icon-description-container": "display: none;"
+	  },
+	//"workbench.editor.tabSizing": "shrink",
+	"workbench.editor.wrapTabs": true,
 	"todohighlight.isEnable": true,
 	"todohighlight.keywords": [
 		{
@@ -118,5 +134,6 @@
 			"backgroundColor": "rgba(0, 0, 0, 0)"
 		}
 	],
-	"todo-tree.tree.scanMode": "workspace"
+	"todo-tree.tree.scanMode": "workspace",
+	"editor.insertSpaces": false
 }

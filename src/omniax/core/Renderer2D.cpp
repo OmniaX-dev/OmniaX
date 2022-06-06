@@ -5,15 +5,24 @@
 #include "DataStructures.hpp"
 #include <omniax/utils/Logger.hpp>
 #include <omniax/vendor/glm/gtc/matrix_transform.hpp>
+#include <omniax/runtime/Signals.hpp>
 #include <cstring>
 
 namespace ox
 {
+	void Renderer2D::Text::init(void)
+	{
+		Text::font = ox::ResourceManager::getDefaultBitmapFont();
+	}
+
 	void Renderer2D::Text::draw(const String& text, const Vec2& position, const Color& color)
 	{
 		if (ResourceManager::getBitmapFont(Renderer2D::Text::font).isInvalid())
 		{
-			return; //TODO: Error
+			ErrorHandler::pushError(Renderer2D::Text::ERR_INVALID_BITMAPFONT);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("ox::Renderer2D::Text::draw(const String&, const Vec2&, const Color&): %s", err_str.c_str());
+			return;
 		}
 		Renderer2D::drawText(text, Renderer2D::Text::font, position, color, Renderer2D::Text::characterHeight, Renderer2D::Text::characterSpacing);
 	}
@@ -60,11 +69,14 @@ namespace ox
 		auto& _font = ResourceManager::getBitmapFont(Renderer2D::Text::font);
 		if (_font.isInvalid())
 		{
-			return { 0.0f, 0.0f }; //TODO: Error
+			ErrorHandler::pushError(Renderer2D::Text::ERR_INVALID_BITMAPFONT);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("ox::Renderer2D::Text::getStringBounds(const String&, const Vec2&, float, float): %s", err_str.c_str());
+			return { 0.0f, 0.0f };
 		}
 		if (characterHeight == 0.0f) characterHeight = Renderer2D::Text::characterHeight;
 		if (spacing == 0.0f) spacing = characterSpacing;
-		const float baseCharHeight = 64.0f; //TODO: mmmh...magic number
+		const float baseCharHeight = _font.getBaseCharHeight();
 		float scale = characterHeight / baseCharHeight;
 		Vec2 bounds;
 		Rectangle cbounds;
@@ -264,7 +276,13 @@ namespace ox
 		if (s_rendererData.currentTexResID != texture || s_rendererData.currentTex == nullptr || s_rendererData.currentTexResID == ResourceManager::InvalidResource)
 		{
 			s_rendererData.currentTex = &(ResourceManager::getTexture(texture));
-			if (s_rendererData.currentTex->isInvalid()) return; //TODO: Error
+			if (s_rendererData.currentTex->isInvalid())
+			{
+				ErrorHandler::pushError(Renderer2D::ERR_INVALID_TEXTURE);
+				String err_str = ErrorHandler::getLastErrorString();
+				OX_ERROR("ox::Renderer2D::drawQuad(const Vec2&, const Vec2&, ResourceID, Transform2D, TextureAtlasIndex, const Color&): %s", err_str.c_str());
+				return;
+			}
 			s_rendererData.currentTexResID = texture;
 			s_rendererData.currentTexIndex = 0.0f;
 			for (uint32_t i = 1; i < s_rendererData.texSlotIndex; i++)
@@ -342,7 +360,13 @@ namespace ox
 			if (s_rendererData.currentTexResID != texture || s_rendererData.currentTex == nullptr || s_rendererData.currentTexResID == ResourceManager::InvalidResource)
 			{
 				s_rendererData.currentTex = &(ResourceManager::getTexture(texture));
-				if (s_rendererData.currentTex->isInvalid()) return; //TODO: Error
+				if (s_rendererData.currentTex->isInvalid())
+				{
+					ErrorHandler::pushError(Renderer2D::ERR_INVALID_TEXTURE);
+					String err_str = ErrorHandler::getLastErrorString();
+					OX_ERROR("ox::Renderer2D::drawQuad(const std::vector<Vec2>&, const Color&, ResourceID, TextureAtlasIndex): %s", err_str.c_str());
+					return;
+				}
 				s_rendererData.currentTexResID = texture;
 				s_rendererData.currentTexIndex = 0.0f;
 				for (uint32_t i = 1; i < s_rendererData.texSlotIndex; i++)
@@ -440,7 +464,6 @@ namespace ox
 
 	void Renderer2D::drawTriangle(const Triangle& triangle, const Color& color)
 	{
-
 		if (s_rendererData.indexCount >= MaxIndexCount)
 		{
 			Renderer2D::endBatch();
@@ -469,7 +492,7 @@ namespace ox
 		s_rendererData.bufferPtr->position = { triangle.C, z_val };
 		s_rendererData.bufferPtr++;
 
-		s_rendererData.bufferPtr->color = color.getNormalizedColor(); //TODO: Using four vertices for a triangle is not ok
+		s_rendererData.bufferPtr->color = color.getNormalizedColor();
 		s_rendererData.bufferPtr->texCoords = { 0.0f, 0.0f };
 		s_rendererData.bufferPtr->texIndex = texIndex;
 		s_rendererData.bufferPtr->position = { triangle.C, z_val };
@@ -484,7 +507,13 @@ namespace ox
 		if (shader != s_rendererData.currentShaderResID || s_rendererData.currentShader == nullptr || s_rendererData.currentShaderResID == ResourceManager::InvalidResource)
 		{
 			s_rendererData.currentShader = &(ResourceManager::getShader(shader));
-			if (s_rendererData.currentShader->isInvalid()) return (Shader&)BaseObject::InvalidRef(); //TODO: Error
+			if (s_rendererData.currentShader->isInvalid())
+			{
+				ErrorHandler::pushError(Renderer2D::ERR_INVALID_SHADER);
+				String err_str = ErrorHandler::getLastErrorString();
+				OX_ERROR("ox::Renderer2D::bindShader(...): %s", err_str.c_str());
+				return (Shader&)BaseObject::InvalidRef();
+			} 
 			s_rendererData.currentShaderResID = shader;
 			if (s_rendererData.indexCount > 0)
 			{
@@ -503,23 +532,21 @@ namespace ox
 		shader.bind();
 		vao.bind();
 		GLCall(glDrawElements(GL_TRIANGLES, vao.getElementCount(), GL_UNSIGNED_INT, 0));
-		// GLCall(glDrawElements(GL_TRIANGLES, vao.getElementCount(), GL_UNSIGNED_INT, 0));
 	}
 
 	void Renderer2D::drawText(const String& text, ResourceID font, Vec2 position, Color color, float charHeight, float spacing)
 	{
-		const float baseCharHeight = 64.0f; //TODO: mmmh...magic number
+		auto& _font = ox::ResourceManager::getBitmapFont(font);
+		const float baseCharHeight = _font.getBaseCharHeight();
 		float scale = charHeight / baseCharHeight;
 		float nextCharX = position.x;
 		spacing *= scale;
-		auto& _font = ox::ResourceManager::getBitmapFont(font);
 		for (uint8_t i = 0; i < text.length(); i++)
 		{
 			ox::Rectangle bounds;
 			ox::TextureAtlasIndex tile = _font.getChar(text[i], bounds);
 			bounds.mulSize(scale, scale);
 			bounds.mulPos(scale, scale);
-			// ox::Renderer2D::drawQuad({ nextCharX, position.y + bounds.y }, bounds.getSize(), _font.getTexture(), ox::Transform2D(), tile, color);
 			ox::Renderer2D::drawQuad(Renderer2D::getStaticQuad({ nextCharX, position.y + bounds.y }, bounds.getSize(), false), color, _font.getTexture(), tile);
 			nextCharX += bounds.w + spacing;
 		}
@@ -546,6 +573,7 @@ namespace ox
 			Renderer2D::endBatch();
 			Renderer2D::flush();
 		}
+		Renderer2D::beginBatch();
 		s_rendererData.currentRenderTarget->bind();
 		//Renderer2D::beginBatch();
 	}
@@ -557,6 +585,7 @@ namespace ox
 			Renderer2D::endBatch();
 			Renderer2D::flush();
 		}
+		Renderer2D::beginBatch();
 		s_rendererData.currentRenderTarget = nullptr;
 		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 		//Renderer2D::beginBatch();
@@ -573,6 +602,18 @@ namespace ox
 		if (s_rendererData.currentRenderTarget == nullptr)
 			return (const RenderTarget&)BaseObject::InvalidRef();
 		return *s_rendererData.currentRenderTarget;
+	}
+
+	const Shader& Renderer2D::getCurrentShader(void)
+	{
+		if (s_rendererData.currentShader == nullptr)
+			return (const Shader&)BaseObject::InvalidRef();
+		return *s_rendererData.currentShader;
+	}
+
+	ResourceID Renderer2D::getCurrentShaderID(void)
+	{
+		return s_rendererData.currentShaderResID;
 	}
 
 	std::vector<Vec2> Renderer2D::getStaticQuad(Vec2 position, Vec2 size, bool centered)
@@ -643,7 +684,17 @@ namespace ox
 
 	RenderTarget::~RenderTarget(void)
 	{
+		destroy();
+	}
+
+	void RenderTarget::destroy(void)
+	{
+		uint32_t id = getOpenGLFrameBufferID();
 		GLCall(glDeleteRenderbuffers(1, &m_rbo_gl_id));
+		GLCall(glDeleteFramebuffers(1, &id));
+		ResourceManager::destroyResource(m_texture, tResourceType::Texture);
+		setID(id);
+		invalidate();
 	}
 
     RenderTarget& RenderTarget::create(int32_t width, int32_t height)
@@ -662,11 +713,24 @@ namespace ox
 		GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_width, m_height));
 		GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_rbo_gl_id));
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			OX_ERROR("FrameBuffer not complete."); //TODO: Error
+		{
+			ErrorHandler::pushError(RenderTarget::ERR_FAILED_TO_CREATE_FRAMEBUFFER);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("%s", err_str.c_str());
+			unbind();
+			destroy();
+			return *this;
+		} 
 		unbind();
 
 		setTypeName("ox::RenderTarget");
 		validate();
+
+		if (!m_signalConnected)
+		{
+			connectSignal(tBuiltinSignals::WindowResized);
+			m_signalConnected = true;
+		}
 
 		return *this;
 	}
@@ -684,5 +748,15 @@ namespace ox
 	void RenderTarget::bindScreenTexture(void) const
 	{
 		ResourceManager::getTexture(m_texture).bind();
+	}
+
+	void RenderTarget::handleSignal(tSignal& signal)
+	{
+		if (signal.ID == tBuiltinSignals::WindowResized)
+		{
+			auto& size = (WindowSizeOnj&)signal.userData;
+			destroy();
+			create(size.width, size.height);
+		}
 	}
 }

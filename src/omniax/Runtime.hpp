@@ -5,7 +5,7 @@
  * This file contains the includes for the whole
  * OmniaX base framework.
  * 
- * This header needs to be included before creating,
+ * This header needs to be included before creating
  * your main application, In order to properly
  * setup GLAD, GLFW and imgui.
  * NOTE: This header needs to be included ONLY ONCE,

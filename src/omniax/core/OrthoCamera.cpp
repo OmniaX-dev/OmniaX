@@ -13,6 +13,9 @@ namespace ox
     {
         m_projection = glm::ortho(left, right, bottom, top, near, far);
         __update_view_proj_mat();
+
+        setTypeName("ox::OrthoCamera");
+        validate();
         return *this;
     }
 
@@ -33,8 +36,5 @@ namespace ox
 
         m_view = glm::inverse(transform);
         m_viewProj = m_projection * m_view;
-
-        setTypeName("ox::OrthoCamera");
-        validate();
     }
 }

@@ -30,7 +30,7 @@ namespace ox
 	class KeyEvent : public Event
 	{
 		public:
-			const int32_t key; //TODO: Maybe remap keys in a tKeys struct
+			const int32_t key;
 			const bool pressed;
 
 			inline KeyEvent(Window& _window, Application& _app, uint8_t _type, int32_t _key, bool _pressed) : Event(_window, _app, _type), key(_key), pressed(_pressed)

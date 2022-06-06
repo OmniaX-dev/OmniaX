@@ -75,6 +75,6 @@ if __name__ == "__main__":
 	#excep_dirs = [inc_dir + "/vendor/GLAD", inc_dir + "/vendor/glm"]
 	src_dir = os.path.join(".", "src", "omniax")
 	inc_dir = os.path.join(".", "Build", "include")
-	excep_dirs = [os.path.join(inc_dir, "vendor", "GLAD"), os.path.join(inc_dir, "vendor", "glm")]
+	excep_dirs = [os.path.join(inc_dir, "vendor", "GLAD"), os.path.join(inc_dir, "vendor", "glm"), os.path.join(inc_dir, "vendor", "clip")]
 	install_includes(src_dir, inc_dir, excep_dirs)
     

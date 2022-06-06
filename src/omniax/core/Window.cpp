@@ -5,6 +5,7 @@
 #include <omniax/utils/Utils.hpp>
 #include <omniax/vendor/stb_image/stb_image.h>
 #include <omniax/static_resources/default_icon_64.hpp>
+#include <omniax/runtime/Signals.hpp>
 
 namespace ox
 {
@@ -62,8 +63,8 @@ namespace ox
         setCustomResizeCallback(nullptr);
 
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glEnable(GL_DEPTH_TEST);
+        glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
+        glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         validate();
         setTypeName("ox::Window");
@@ -132,10 +133,20 @@ namespace ox
         return OX_NO_ERROR;
 
     }
+
+    IPoint Window::getSize(void)
+    {
+        int32_t width = 0;
+        int32_t height = 0;
+        glfwGetWindowSize(m_window, &width, &height);
+        return { width, height };
+    }
     
     void Window::framebuffer_size_callback(GLFWwindow* window, int32_t width, int32_t height)
     {
         glViewport(0, 0, width, height);
+        WindowSizeOnj size(width, height);
+        SignalHandler::emitSignal(tBuiltinSignals::WindowResized, tSignalPriority::RealTime, size);
     }
 
 }

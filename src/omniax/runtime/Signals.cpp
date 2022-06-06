@@ -1,5 +1,6 @@
 #include "Signals.hpp"
 #include <omniax/utils/BaseObject.hpp>
+#include <omniax/utils/Logger.hpp>
 
 namespace ox
 {
@@ -17,6 +18,8 @@ namespace ox
 		SignalHandler::m_keyReleasedRecievers.reserve(SignalHandler::__SIGNAL_BUFFER_START_SIZE);
 		SignalHandler::m_mouseMovedRecievers.clear();
 		SignalHandler::m_mouseMovedRecievers.reserve(SignalHandler::__SIGNAL_BUFFER_START_SIZE);
+		SignalHandler::m_windowResizedRecievers.clear();
+		SignalHandler::m_windowResizedRecievers.reserve(SignalHandler::__SIGNAL_BUFFER_START_SIZE);
 		SignalHandler::m_delegatedSignals.clear();
 		SignalHandler::m_delegatedSignals.reserve(SignalHandler::__DELEGATED_SIGNALS_BUFFER_START_SIZE);
 	}
@@ -48,9 +51,15 @@ namespace ox
 			sig_list = &m_keyReleasedRecievers;
 		else if (signal_id == tBuiltinSignals::MouseMoved)
 			sig_list = &m_mouseMovedRecievers;
+		else if (signal_id == tBuiltinSignals::WindowResized)
+			sig_list = &m_windowResizedRecievers;
 		else if (signal_id > tBuiltinSignals::CustomSignalBase)
 			sig_list = &m_customRecievers;
-		if (sig_list == nullptr) return; //TODO: Warning, unknown signal
+		if (sig_list == nullptr)
+		{
+			OX_WARN("ox::SignalHandler::emitSignal(...): Unknown signal ID: <%d>", signal_id);
+			return;
+		}
 		for (auto& sop : *sig_list)
 		{
 			if (sop.signal_id == signal_id)
@@ -73,8 +82,11 @@ namespace ox
 			m_keyReleasedRecievers.push_back({ &object, signal_id });
 		else if (signal_id == tBuiltinSignals::MouseMoved)
 			m_mouseMovedRecievers.push_back({ &object, signal_id });
+		else if (signal_id == tBuiltinSignals::WindowResized)
+			m_windowResizedRecievers.push_back({ &object, signal_id });
 		else if (signal_id > tBuiltinSignals::CustomSignalBase)
 			m_customRecievers.push_back({ &object, signal_id });
-		//TODO: Warning, unknown signal
+		else 
+			OX_WARN("ox::SignalHandler::connect(...): Unknown signal ID: <%d>", signal_id);
 	}
 }

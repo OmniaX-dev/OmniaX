@@ -9,6 +9,8 @@
 #include <omniax/runtime/Signals.hpp>
 #include <omniax/core/ResourceManager.hpp>
 #include <omniax/core/Input.hpp>
+#include <omniax/runtime/RTData.hpp>
+#include <omniax/core/Lighting.hpp>
 
 namespace ox
 {
@@ -32,11 +34,11 @@ namespace ox
 		ox::Renderer2D::init();
 		SignalHandler::init();
 		ResourceManager::init();
+		ox::Renderer2D::Text::init();
 		Input::init(m_window.getGLFWWindowPtr());
 		/******************************/
 
-		m_windowWidth = windowWidth;
-		m_windowHeight = windowHeight;
+		m_lastFrameTime = glfwGetTime();
 
 		glfwSetWindowUserPointer(m_window.getGLFWWindowPtr(), static_cast<void*>(this));
 		glfwSetKeyCallback(m_window.getGLFWWindowPtr(), __key_event_callback);
@@ -53,6 +55,8 @@ namespace ox
 		StringEditor se = "#version ";
 		se.addi(gl_major_version_hint).addi(gl_minor_version_hint).add("0");
 		ImGui_ImplOpenGL3_Init(se.c_str());
+	
+		connectSignal(ox::tBuiltinSignals::WindowResized);
 
 		setTypeName("ox::Application");
 		validate();
@@ -73,14 +77,17 @@ namespace ox
 	{
 		double currTime = glfwGetTime();
 		m_rtfps++;
+		RTData::DeltaTime = (float)(currTime - m_lastFrameTime);
+		m_lastFrameTime = currTime;
 		if (currTime - m_prevTime >= 1.0f)
 		{
+			onSecondsUpdate();
 			m_fps = m_rtfps;
 			m_rtfps = 0;
 			m_prevTime = currTime;
 		}
+		LightingManager::update();
 		onFrameStart();
-		m_window.clear(m_clearColor, m_gl_clear_bit_mask);
 		m_window.processEvents();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -89,6 +96,7 @@ namespace ox
 
 		onUpdate();
 		onRender();
+		Renderer2D::setDefaultRenderTarget();
 		onImGuiRender();
 
 		ImGui::Render();
@@ -97,6 +105,17 @@ namespace ox
 		m_window.swapBuffers();
 		m_window.pollEvents();
 		onFrameEnd();
+	}
+
+	void Application::handleSignal(tSignal& signal)
+	{
+		if (signal.ID == tBuiltinSignals::WindowResized)
+		{
+			WindowSizeOnj& size = (WindowSizeOnj&)signal.userData;
+			LightingManager::updateScreenSize(size.width, size.height);
+		}
+
+		onSignal(signal);
 	}
 
 	BaseObject& Application::getCustomData1(void)
@@ -126,7 +145,13 @@ namespace ox
 	void Application::__key_event_callback(GLFWwindow* _win, int32_t _key, int32_t _scan, int32_t _action, int32_t _mods)
 	{
 		Application* app = static_cast<Application*>(glfwGetWindowUserPointer(_win));
-		if (app == nullptr) return; //TODO: Error
+		if (app == nullptr)
+		{
+			ErrorHandler::pushError(Application::ERR_INVALID_APP_INSTANCE);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("%s", err_str.c_str());
+			return;
+		}
 		if (_action == GLFW_PRESS)
 		{
 			auto evt = KeyEvent(app->m_window, *app, tEventTypes::KeyPressed, _key, true);
@@ -144,7 +169,13 @@ namespace ox
 	void Application::__mouse_btn_event_callback(GLFWwindow* _win, int32_t _btn, int32_t _action, int32_t _mods)
 	{
 		Application* app = static_cast<Application*>(glfwGetWindowUserPointer(_win));
-		if (app == nullptr) return; //TODO: Error
+		if (app == nullptr)
+		{
+			ErrorHandler::pushError(Application::ERR_INVALID_APP_INSTANCE);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("%s", err_str.c_str());
+			return;
+		}
 		double xpos, ypos;
 		glfwGetCursorPos(_win , &xpos, &ypos);
 		uint32_t mx = static_cast<uint32_t>(xpos);
@@ -166,10 +197,18 @@ namespace ox
 	void Application::__mouse_moved_callback(GLFWwindow* _win, double _x, double _y)
 	{
 		Application* app = static_cast<Application*>(glfwGetWindowUserPointer(_win));
-		if (app == nullptr) return; //TODO: Error
+		auto wsize = app->getWindowSize();
+		if (app == nullptr)
+		{
+			ErrorHandler::pushError(Application::ERR_INVALID_APP_INSTANCE);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("%s", err_str.c_str());
+			return;
+		}
 		if (_x < 0) _x = 0;
 		if (_y < 0) _y = 0;
-		//TODO: Check for other window bounds
+		if (_x >= wsize.x) _x = wsize.x - 1;
+		if (_y >= wsize.y) _y = wsize.y - 1;
 		uint32_t mx = static_cast<uint32_t>(_x);
 		uint32_t my = static_cast<uint32_t>(_y);
 		auto evt = MouseMovedEvent(app->m_window, *app, mx, my);

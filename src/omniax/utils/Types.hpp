@@ -11,6 +11,7 @@ namespace ox
 	typedef uint32_t ResourceID;
 	typedef uint32_t TextureAtlasIndex;
 	typedef uint8_t JoystickID;
+	typedef uint32_t LightID;
 
 	typedef uint32_t StreamIndex;
 	typedef int64_t QWord;
@@ -43,6 +44,12 @@ namespace ox
 		static inline const uint8_t ADDR = 4;
 		static inline const uint8_t FLOAT = 4;
 		static inline const uint8_t DOUBLE = 8;
+	};
+
+	struct TextureID
+	{
+		ResourceID texture { 0 };
+		TextureAtlasIndex tile { 0 };
 	};
 
 	typedef std::vector<Byte> ByteStream;

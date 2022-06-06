@@ -1,12 +1,9 @@
 #include "Utils.hpp"
 #include "Defines.hpp"
 #include <omniax/vendor/TermColor.hpp>
-
-//#include "clip/clip.h"
-
+#include <omniax/vendor/clip/clip.h>
 #include <bitset>
 #include <chrono>
-#include <random>
 #include <algorithm>
 #include <cctype>
 #include <string>
@@ -15,131 +12,132 @@
 #include <iomanip>
 #include <iostream>
 #include <thread>
+#include <GLFW/glfw3.h>
 
 namespace ox
 {
-	// RealTime::RealTime(void)
-	// {
-	// 	minutes = 0;
-	// 	hours = 0;
-	// 	days = 0;
-	// 	months = 0;
-	// 	years = 2022;
-	// 	m_timeOfDay = 0.0f;
-	// 	m_totalSeconds = 0.0f;
-	// }
+	GameClock::GameClock(void)
+	{
+		minutes = 0;
+		hours = 0;
+		days = 0;
+		months = 0;
+		years = 2022;
+		m_timeOfDay = 0.0f;
+		m_totalSeconds = 0.0f;
+	}
 
-	// const float& RealTime::start(void)
-	// {
-	// 	m_rtClock.restart();
-	// 	m_timeOfDay = CAP((1.0f / ((float)(TM_G_MINUTES_FOR_G_HOUR * TM_G_HOURS_FOR_G_DAY))) * ((hours * TM_G_MINUTES_FOR_G_HOUR) + (minutes)), 1.0f);
-	// 	return m_timeOfDay;
-	// }
+	const float& GameClock::start(void)
+	{
+		m_rtClock.start(false, "", eTimeUnits::Seconds);
+		m_timeOfDay = CAP((1.0f / ((float)(TM_G_MINUTES_FOR_G_HOUR * TM_G_HOURS_FOR_G_DAY))) * ((hours * TM_G_MINUTES_FOR_G_HOUR) + (minutes)), 1.0f);
+		return m_timeOfDay;
+	}
 
-	// String RealTime::asString(void)
-	// {
-	// 	std::ostringstream ss;
-	// 	ss << "Time: " << getFormattedTime() << " - ";
-	// 	ss << (int32_t)(days + 1) << " " << convertMonth() << " " << (int32_t)(years);
-	// 	return String(ss.str());
-	// }
+	String GameClock::asString(void)
+	{
+		std::ostringstream ss;
+		ss << "Time: " << getFormattedTime() << " - ";
+		ss << (int32_t)(days + 1) << " " << convertMonth() << " " << (int32_t)(years);
+		return String(ss.str());
+	}
 
-	// void RealTime::update(void)
-	// {
-	// 	int64_t elapsed = m_rtClock.getElapsedTime().asSeconds();
-	// 	if (hours == 255)
-	// 		hours = TM_G_HOURS_FOR_G_DAY - 1;
-	// 	else if (hours >= TM_G_HOURS_FOR_G_DAY)
-	// 		hours = 0;
-	// 	if (elapsed >= TM_R_SECONDS_FOR_G_MINUTE)
-	// 	{
-	// 		minutes++;
-	// 		if (minutes >= TM_G_MINUTES_FOR_G_HOUR)
-	// 		{
-	// 			hours++;
-	// 			if (hours >= TM_G_HOURS_FOR_G_DAY)
-	// 			{
-	// 				days++;
-	// 				if ((months == (uint8_t)eMonths::January || months == (uint8_t)eMonths::March ||
-	// 					months == (uint8_t)eMonths::May || months == (uint8_t)eMonths::July ||
-	// 					months == (uint8_t)eMonths::August || months == (uint8_t)eMonths::October ||
-	// 					months == (uint8_t)eMonths::December) && days >= TM_G_DAYS_FOR_G_LONG_MONTH)
-	// 				{
-	// 					months++;
-	// 					if (months > (uint8_t)eMonths::December)
-	// 					{
-	// 						years++;
-	// 						months = (uint8_t)eMonths::January;
-	// 					}
-	// 					days = 0;
-	// 				}
-	// 				else if ((months == (uint8_t)eMonths::April || months == (uint8_t)eMonths::June ||
-	// 						months == (uint8_t)eMonths::September || months == (uint8_t)eMonths::November) && days >= TM_G_DAYS_FOR_G_MEDIUM_MONTH)
-	// 				{
-	// 					months++;
-	// 					days = 0;
-	// 				}
-	// 				else if (months == (uint8_t)eMonths::February)
-	// 				{
-	// 					if ((years % 4 == 0 && days >= TM_G_DAYS_FOR_G_SHORT_MONTH + 1) ||
-	// 						(years % 4 != 0 && days >= TM_G_DAYS_FOR_G_SHORT_MONTH))
-	// 					{
-	// 						months++;
-	// 						days = 0;
-	// 					}
-	// 				}
-	// 				hours = 0;
-	// 			}
-	// 			minutes = 0;
-	// 		}
-	// 		m_totalSeconds += elapsed;
-	// 		m_rtClock.restart();
-	// 		m_timeOfDay = CAP((1.0f / ((float)(TM_G_MINUTES_FOR_G_HOUR * TM_G_HOURS_FOR_G_DAY))) * ((hours * TM_G_MINUTES_FOR_G_HOUR) + (minutes)), 1.0f);
-	// 	}
-	// }
+	void GameClock::update(void)
+	{
+		int64_t elapsed = m_rtClock.start(false, "", eTimeUnits::Seconds);
+		if (hours == 255)
+			hours = TM_G_HOURS_FOR_G_DAY - 1;
+		else if (hours >= TM_G_HOURS_FOR_G_DAY)
+			hours = 0;
+		if (elapsed >= TM_R_SECONDS_FOR_G_MINUTE)
+		{
+			minutes++;
+			if (minutes >= TM_G_MINUTES_FOR_G_HOUR)
+			{
+				hours++;
+				if (hours >= TM_G_HOURS_FOR_G_DAY)
+				{
+					days++;
+					if ((months == (uint8_t)eMonths::January || months == (uint8_t)eMonths::March ||
+						months == (uint8_t)eMonths::May || months == (uint8_t)eMonths::July ||
+						months == (uint8_t)eMonths::August || months == (uint8_t)eMonths::October ||
+						months == (uint8_t)eMonths::December) && days >= TM_G_DAYS_FOR_G_LONG_MONTH)
+					{
+						months++;
+						if (months > (uint8_t)eMonths::December)
+						{
+							years++;
+							months = (uint8_t)eMonths::January;
+						}
+						days = 0;
+					}
+					else if ((months == (uint8_t)eMonths::April || months == (uint8_t)eMonths::June ||
+							months == (uint8_t)eMonths::September || months == (uint8_t)eMonths::November) && days >= TM_G_DAYS_FOR_G_MEDIUM_MONTH)
+					{
+						months++;
+						days = 0;
+					}
+					else if (months == (uint8_t)eMonths::February)
+					{
+						if ((years % 4 == 0 && days >= TM_G_DAYS_FOR_G_SHORT_MONTH + 1) ||
+							(years % 4 != 0 && days >= TM_G_DAYS_FOR_G_SHORT_MONTH))
+						{
+							months++;
+							days = 0;
+						}
+					}
+					hours = 0;
+				}
+				minutes = 0;
+			}
+			m_totalSeconds += elapsed;
+			m_rtClock.start(false, "", eTimeUnits::Seconds);
+			m_timeOfDay = CAP((1.0f / ((float)(TM_G_MINUTES_FOR_G_HOUR * TM_G_HOURS_FOR_G_DAY))) * ((hours * TM_G_MINUTES_FOR_G_HOUR) + (minutes)), 1.0f);
+		}
+	}
 
-	// String RealTime::getFormattedTime(void)
-	// {
-	// 	bool zh = (int32_t)(hours / 10) < 1;
-	// 	bool zm = (int32_t)(minutes / 10) < 1;
-	// 	std::ostringstream ss;
-	// 	ss << (zh ? "0" : "") << (int32_t)hours << ":" << (zm ? "0" : "") << (int32_t)minutes;
-	// 	return String(ss.str());
-	// }
+	String GameClock::getFormattedTime(void)
+	{
+		bool zh = (int32_t)(hours / 10) < 1;
+		bool zm = (int32_t)(minutes / 10) < 1;
+		std::ostringstream ss;
+		ss << (zh ? "0" : "") << (int32_t)hours << ":" << (zm ? "0" : "") << (int32_t)minutes;
+		return String(ss.str());
+	}
 
-	// String RealTime::convertMonth(void)
-	// {
-	// 	switch (months)
-	// 	{
-	// 		case (uint8_t)eMonths::January:
-	// 			return "January";
-	// 		case (uint8_t)eMonths::February:
-	// 			return "February";
-	// 		case (uint8_t)eMonths::March:
-	// 			return "March";
-	// 		case (uint8_t)eMonths::April:
-	// 			return "April";
-	// 		case (uint8_t)eMonths::May:
-	// 			return "May";
-	// 		case (uint8_t)eMonths::June:
-	// 			return "June";
-	// 		case (uint8_t)eMonths::July:
-	// 			return "July";
-	// 		case (uint8_t)eMonths::August:
-	// 			return "August";
-	// 		case (uint8_t)eMonths::September:
-	// 			return "September";
-	// 		case (uint8_t)eMonths::October:
-	// 			return "October";
-	// 		case (uint8_t)eMonths::November:
-	// 			return "November";
-	// 		case (uint8_t)eMonths::December:
-	// 			return "December";
-	// 		default:
-	// 			break;
-	// 	}
-	// 	return "_MONTH_";
-	// }
+	String GameClock::convertMonth(void)
+	{
+		switch (months)
+		{
+			case (uint8_t)eMonths::January:
+				return "January";
+			case (uint8_t)eMonths::February:
+				return "February";
+			case (uint8_t)eMonths::March:
+				return "March";
+			case (uint8_t)eMonths::April:
+				return "April";
+			case (uint8_t)eMonths::May:
+				return "May";
+			case (uint8_t)eMonths::June:
+				return "June";
+			case (uint8_t)eMonths::July:
+				return "July";
+			case (uint8_t)eMonths::August:
+				return "August";
+			case (uint8_t)eMonths::September:
+				return "September";
+			case (uint8_t)eMonths::October:
+				return "October";
+			case (uint8_t)eMonths::November:
+				return "November";
+			case (uint8_t)eMonths::December:
+				return "December";
+			default:
+				break;
+		}
+		return "_MONTH_";
+	}
 	
 	#define __get_local_time() \
 			std::time_t __cur_t = std::time(0); \
@@ -638,21 +636,16 @@ namespace ox
 		return std::chrono::duration_cast<std::chrono::milliseconds> (std::chrono::system_clock::now().time_since_epoch()).count() - Utils::s_startTime_ms;
 	}
 
-	// bool Utils::setClipboardText(String text)
-	// {
-	// 	return clip::set_text(text.cpp());
-	// }
-
-	// String Utils::getClipboardText(void)
-	// {
-	// 	_string text = "";
-	// 	if (!clip::get_text(text)) return "";
-	// 	return String(text);
-	// }
-
-	float Utils::get_rand_float(float min, float max)
+	bool Utils::setClipboardText(String text)
 	{
-		return ((float)(rand()) / (float)((RAND_MAX)) * (max - min)) + min;
+		return clip::set_text(text);
+	}
+
+	String Utils::getClipboardText(void)
+	{
+		String text = "";
+		if (!clip::get_text(text)) return "";
+		return text;
 	}
 
 	float Utils::map_value(float input, float input_start, float input_end, float output_start, float output_end)

@@ -27,6 +27,7 @@ namespace ox
                            int32_t wrap_s_mode = GL_CLAMP_TO_EDGE,
                            int32_t wrap_t_mode = GL_CLAMP_TO_EDGE);
             Texture(int32_t width, int32_t height);
+            ~Texture(void);
             Texture& create(const String& path,
                            bool store_data = false,
                            int32_t min_filter_mode = GL_LINEAR,
@@ -34,6 +35,13 @@ namespace ox
                            int32_t wrap_s_mode = GL_CLAMP_TO_EDGE,
                            int32_t wrap_t_mode = GL_CLAMP_TO_EDGE);
             Texture& create(int32_t width, int32_t height);
+            Texture& create(const unsigned char* data,
+                                      unsigned int data_size,
+                                      bool store_data = false,
+                                      int32_t min_filter_mode = GL_LINEAR,
+                                      int32_t mag_filter_mode = GL_LINEAR,
+                                      int32_t wrap_s_mode = GL_CLAMP_TO_EDGE,
+                                      int32_t wrap_t_mode = GL_CLAMP_TO_EDGE);
             const uint8_t* getPixelData(void);
             void bind(uint32_t slot = 0) const;
             void unbind(void) const;

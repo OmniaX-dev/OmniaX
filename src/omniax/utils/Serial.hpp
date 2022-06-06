@@ -43,9 +43,9 @@ namespace ox
 				inline uint64_t size(void) { return m_data.size(); }
 				inline ByteStream& getData(void) { return m_data; }
 
-				void print(StreamIndex start, IOutputHandler& out); //TODO: Temporary
+				void print(StreamIndex start, IOutputHandler& out);
 
-			private: //TODO: Make this private again
+			private:
 				ByteStream m_data;
 
 			public:

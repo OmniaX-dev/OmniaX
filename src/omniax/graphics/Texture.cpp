@@ -18,21 +18,25 @@ namespace ox
 		create(width, height);
 	}
 
+	Texture::~Texture(void)
+	{
+		uint32_t id = getOpenGLID();
+		GLCall(glDeleteTextures(1, &id));
+		setID(id);
+		invalidate();
+	}
+
 	Texture& Texture::create(const String& path, bool store_data, int32_t min_filter_mode, int32_t mag_filter_mode, int32_t wrap_s_mode, int32_t wrap_t_mode)
 	{
 		invalidate();
 		stbi_set_flip_vertically_on_load(1);
 		if (m_localData != nullptr)
-		{
 			stbi_image_free(m_localData);
-			m_width = 0;
-			m_height = 0;
-			m_localData = nullptr;
-			m_filePath = "";
-			m_bpp = 0;
-			m_dataStored = false;
-			setID(0);
-		}
+		m_localData = nullptr;
+		m_filePath = "";
+		m_bpp = 0;
+		m_dataStored = false;
+		setID(0);
 		m_localData = stbi_load(path.c_str(), &m_width, &m_height, &m_bpp, 4);
 		if (m_localData == nullptr)
 		{
@@ -72,16 +76,12 @@ namespace ox
 	{
 		invalidate();
 		if (m_localData != nullptr)
-		{
 			stbi_image_free(m_localData);
-			m_width = 0;
-			m_height = 0;
-			m_localData = nullptr;
-			m_filePath = "";
-			m_bpp = 0;
-			m_dataStored = false;
-			setID(0);
-		}
+		m_localData = nullptr;
+		m_filePath = "";
+		m_bpp = 0;
+		m_dataStored = false;
+		setID(0);
 		m_width = width;
 		m_height = height;
 		uint32_t gl_id;
@@ -95,6 +95,51 @@ namespace ox
 
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_localData));
 		GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+
+		setTypeName("ox::Texture");
+		validate();
+		return *this;
+	}
+	
+	Texture& Texture::create(const unsigned char* data, unsigned int data_size, bool store_data, int32_t min_filter_mode, int32_t mag_filter_mode, int32_t wrap_s_mode, int32_t wrap_t_mode)
+	{
+		invalidate();
+		stbi_set_flip_vertically_on_load(1);
+		if (m_localData != nullptr)
+			stbi_image_free(m_localData);
+		m_localData = nullptr;
+		m_filePath = "";
+		m_bpp = 0;
+		m_dataStored = false;
+		setID(0);
+		m_localData = stbi_load_from_memory(data, data_size, &m_width, &m_height, &m_bpp, 4);
+		if (m_localData == nullptr)
+		{
+			ErrorHandler::pushError(Texture::ERR_IMAGE_LOAD_FAILED);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("%s\nMemory://data", err_str.c_str());
+			return *this;
+		}
+		uint32_t gl_id;
+		GLCall(glGenTextures(1, &gl_id));
+		setID(gl_id);
+		bind();
+
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter_mode));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter_mode));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s_mode));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t_mode));
+
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_localData));
+		GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+		//unbind();
+
+		m_dataStored = store_data;
+		if (!m_dataStored)
+		{
+			stbi_image_free(m_localData);
+			m_localData = nullptr;
+		}
 
 		setTypeName("ox::Texture");
 		validate();
@@ -126,7 +171,11 @@ namespace ox
 
 	TextureAtlasIndex Texture::addTileInfo(uint32_t x, uint32_t y, uint32_t w, uint32_t h)
 	{
-		if (isInvalid() || x + w > m_width || y + h > m_height) return Texture::FullTextureCoords; //TODO: Error
+		if (isInvalid() || x + w > m_width || y + h > m_height)
+		{
+			OX_WARN("ox::Texture::addTileInfo(...): Invalid texture coordinates.");
+			return Texture::FullTextureCoords;
+		}
 		if (!hasTileData())
 			m_tiles.push_back(tTexCoords());
 		Vec2 bottomLeft = { (float)x / (float)m_width, 1.0f - ((float)(y + h) / (float)m_height) };
@@ -144,8 +193,11 @@ namespace ox
 
 	Texture::tTexCoords Texture::getTile(TextureAtlasIndex index)
 	{
-		if (!hasTileData() || index >= m_tiles.size()) return Texture::tTexCoords(); //TODO: Warning
+		if (!hasTileData() || index >= m_tiles.size()) 
+		{
+			//OX_WARN("ox::Texture::getTile(...): Unable to retrieve tile.");
+			return Texture::tTexCoords();
+		}
 		return m_tiles[index];
 	}
-	
 }

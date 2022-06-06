@@ -31,6 +31,7 @@ namespace ox
 		public: class Text
 		{
 			public:
+				static void init(void);
 				static void draw(const String& text, const Vec2& position, const Color& color);
 				static void draw(const String& text, const Vec2& position, const tTextInfo& info);
 				static void drawCentered(const String& text, const Vec2& position, const Color& color);
@@ -42,6 +43,9 @@ namespace ox
 				inline static ResourceID font { ResourceManager::InvalidResource };
 				inline static float characterHeight { 32.0f };
 				inline static float characterSpacing { 5.0f };
+
+			public:
+				inline static constexpr int32_t ERR_INVALID_BITMAPFONT = OX_RENDERER2D_TEXT_ERR_MASK + 0x0001;
 		};
 
 		public:
@@ -65,16 +69,22 @@ namespace ox
 
 			static Shader& bindShader(ResourceID shader);
 
-			static void clear(const Color& color, uint32_t gl_mask);
+			static void clear(const Color& color, uint32_t gl_mask = GL_COLOR_BUFFER_BIT);
 			static void setRenderTarget(const RenderTarget& target);
 			static void setDefaultRenderTarget(void);
 			static void enableDepthTest(bool enable = true);
 
 			static const RenderTarget& getCurrentRenderTarget(void);
+			static const Shader& getCurrentShader(void);
+			static ResourceID getCurrentShaderID(void);
 			inline static const RenderTarget& getDefaultRenderTarget(void) { return (const RenderTarget&)BaseObject::InvalidRef(); }
 
 			static std::vector<Vec2> getStaticQuad(Vec2 position, Vec2 size, bool centered = true);
 			static std::vector<Vec2> tranformQuad(Vec2 position, Vec2 size, const Transform2D& transform);
+
+		public:
+			inline static constexpr int32_t ERR_INVALID_TEXTURE = OX_RENDERER2D_ERR_MASK + 0x0001;
+			inline static constexpr int32_t ERR_INVALID_SHADER = OX_RENDERER2D_ERR_MASK + 0x0002;
 	};
 
     class RenderTarget : public BaseObject
@@ -83,21 +93,28 @@ namespace ox
             inline RenderTarget(void) { invalidate(); }
             inline RenderTarget(int32_t width, int32_t height) { create(width, height); }
             virtual ~RenderTarget(void);
+			void destroy(void);
             RenderTarget& create(int32_t width, int32_t height);
 
             inline uint32_t getOpenGLFrameBufferID(void) const { return static_cast<uint32_t>(getID()); }
             inline uint32_t getOpenGLRenderBufferID(void) const { return m_rbo_gl_id; }
-			inline ResourceID getResourceID(void) { return m_texture; }
+			inline ResourceID getResourceID(void) const { return m_texture; }
 
             void bind(void) const;
             void unbind(void) const;
             void bindScreenTexture(void) const;
+
+			void handleSignal(tSignal& signal) override;
 
         private:
             ResourceID m_texture;
             uint32_t m_rbo_gl_id;
             int32_t m_width;
             int32_t m_height;
+			bool m_signalConnected { false };
+
+		public:
+			inline static constexpr int32_t ERR_FAILED_TO_CREATE_FRAMEBUFFER = OX_RENDERTARGET_ERR_MASK + 0x0001;
     };
 
 	typedef RenderTarget RenderTexture;

@@ -1,35 +1,22 @@
 #include "BitmapFont.hpp"
 #include <omniax/core/ResourceManager.hpp>
 #include <omniax/graphics/Texture.hpp>
+#include <omniax/core/Errors.hpp>
+#include <omniax/utils/Logger.hpp>
 
 namespace ox
 {
 	BitmapFont& BitmapFont::create(String filePath)
 	{
 		m_texture = ResourceManager::loadTexture(filePath, true, GL_LINEAR, GL_LINEAR);
-		if (m_texture == ResourceManager::InvalidResource)
-			return *this; //TODO: Error
-		auto& tex = ResourceManager::getTexture(m_texture);
-		if (tex.getWidth() % 16 != 0 || tex.getHeight() % 16 != 0)
-			return *this; //TODO: Error
-		m_charSize = { (float)(tex.getWidth() / 16), (float)(tex.getHeight() / 16) };
-		m_textureSize = { (float)tex.getWidth(), (float)tex.getHeight() };
-		calc_char_bounds();
-		float spaceWidth = 20; //TODO: Add customizable space width
-		m_charBounds[(uint32_t)' '] = { (m_charSize.x - spaceWidth) / 2.0f, 5.0f, spaceWidth, m_charSize.y - 10 };
-		for (uint32_t y = 0; y < 16; y++)
-		{
-			for (uint32_t x = 0; x < 16; x++)
-			{
-				auto& bounds = m_charBounds[CONVERT_2D_1D(x, y, 16)];
-				m_characters.push_back(tex.addTileInfo((x * m_charSize.x) + bounds.x,
-													   (y * m_charSize.y) + bounds.y,
-													    bounds.w,
-														bounds.h));
-			}
-		}
-		setTypeName("ox::BitmapFont");
-		validate();
+		__load();
+		return *this;
+	}
+
+	BitmapFont& BitmapFont::create(ResourceID texture)
+	{
+		m_texture = texture;
+		__load();
 		return *this;
 	}
 
@@ -73,5 +60,41 @@ namespace ox
 				m_charBounds.push_back(rect);
 			}
 		}
+	}
+
+	void BitmapFont::__load(void)
+	{
+		if (m_texture == ResourceManager::InvalidResource)
+		{
+			ErrorHandler::pushError(BitmapFont::ERR_INVALID_TEXTURE);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("%s", err_str.c_str());
+			return;
+		}
+		auto& tex = ResourceManager::getTexture(m_texture);
+		if (tex.getWidth() % 16 != 0 || tex.getHeight() % 16 != 0)
+		{
+			ErrorHandler::pushError(BitmapFont::ERR_INVALID_TEXTURE_SIZE);
+			String err_str = ErrorHandler::getLastErrorString();
+			OX_ERROR("%s", err_str.c_str());
+			return;
+		}
+		m_charSize = { (float)(tex.getWidth() / 16), (float)(tex.getHeight() / 16) };
+		m_textureSize = { (float)tex.getWidth(), (float)tex.getHeight() };
+		calc_char_bounds();
+		m_charBounds[(uint32_t)' '] = { (m_charSize.x - m_spaceWidth) / 2.0f, 5.0f, m_spaceWidth, m_charSize.y - 10 };
+		for (uint32_t y = 0; y < 16; y++)
+		{
+			for (uint32_t x = 0; x < 16; x++)
+			{
+				auto& bounds = m_charBounds[CONVERT_2D_1D(x, y, 16)];
+				m_characters.push_back(tex.addTileInfo((x * m_charSize.x) + bounds.x,
+													   (y * m_charSize.y) + bounds.y,
+													    bounds.w,
+														bounds.h));
+			}
+		}
+		setTypeName("ox::BitmapFont");
+		validate();
 	}
 }

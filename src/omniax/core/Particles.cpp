@@ -2,6 +2,7 @@
 #include <omniax/utils/Defines.hpp>
 #include <omniax/utils/Utils.hpp>
 #include <omniax/core/Renderer2D.hpp>
+#include <omniax/utils/Random.hpp>
 
 namespace ox
 {
@@ -14,46 +15,46 @@ namespace ox
 		
 		float angle = partInfo.angle;
 		if (partInfo.allDirectionos)
-			angle = Utils::get_rand_float(0.0f, 360.0f);
+			angle = Random::getf32(0.0f, 360.0f);
 		float dirVar = angle * partInfo.randomDirection;
-		angle += Utils::get_rand_float(-dirVar, dirVar);
+		angle += Random::getf32(-dirVar, dirVar);
 
 		float speedVar = partInfo.speed * partInfo.randomSpeed;
-		float speed = partInfo.speed + Utils::get_rand_float(-speedVar, speedVar);
+		float speed = partInfo.speed + Random::getf32(-speedVar, speedVar);
 
 		float rad = DEG_TO_RAD(angle);
 		velocity = { speed * std::cos(rad), -speed * std::sin(rad) };
 		Vec2 velVar { velocity.x * partInfo.randomVelocity.x, velocity.y * partInfo.randomVelocity.y };
-		velocity.x += Utils::get_rand_float(-velVar.x, velVar.x);
-		velocity.y += Utils::get_rand_float(-velVar.y, velVar.y);
+		velocity.x += Random::getf32(-velVar.x, velVar.x);
+		velocity.y += Random::getf32(-velVar.y, velVar.y);
 
 		float lifeVar = partInfo.lifeSpan * partInfo.randomLifeSpan;
 		life = partInfo.lifeSpan;
-		life += Utils::get_rand_float(-lifeVar, lifeVar);
+		life += Random::getf32(-lifeVar, lifeVar);
 
 		color = partInfo.color;
 		float alphaVar = color.a * partInfo.randomAlpha;
-		color.a += (int8_t)RANDOM(-(int8_t)alphaVar, (int8_t)alphaVar);
+		color.a += Random::geti8(-(int8_t)alphaVar, (int8_t)alphaVar);
 		alpha = 0.0f;
 		m_curr_alpha = 0.0f;
 
 		size = partInfo.size;
 		Vec2 sizeVar { size.x * partInfo.randomSize.x, size.y * partInfo.randomSize.y };
-		size.x += Utils::get_rand_float(-sizeVar.x, sizeVar.x);
+		size.x += Random::getf32(-sizeVar.x, sizeVar.x);
 		if (partInfo.square)
 			size.y = size.x;
 		else
-			size.y += Utils::get_rand_float(-sizeVar.y, sizeVar.y);
+			size.y += Random::getf32(-sizeVar.y, sizeVar.y);
 
 		if (partInfo.randomDamping)
 		{
-			velocityDamping.x += Utils::get_rand_float(0, partInfo.damping.x);
-			velocityDamping.y += Utils::get_rand_float(0, partInfo.damping.y);
+			velocityDamping.x += Random::getf32(0, partInfo.damping.x);
+			velocityDamping.y += Random::getf32(0, partInfo.damping.y);
 		}
 
 		rotationStep = partInfo.rotationStep;
 		float rotVar = rotationStep * partInfo.randomRotation;
-		rotationStep += Utils::get_rand_float(-rotVar, rotVar);
+		rotationStep += Random::getf32(-rotVar, rotVar);
 
 		texture = partInfo.texture;
 		tileIndex = partInfo.tileIndex;
@@ -79,12 +80,29 @@ namespace ox
 		fulLAlpha = color.a;
 		m_fade_in_mult = (partInfo.lifeSpan / 100.0f);
 		colorRamp = partInfo.colorRamp;
+
+		emit_light = partInfo.emit_light;
+		if (emit_light)
+		{
+			light_source.position = position;
+			light_source.color = color;
+			light_source.is_dead = false;
+			light_source.is_on = true;
+			light_source.size = partInfo.light_size;
+			light_source.texture = partInfo.light_texture;
+			light_size_mlt_threshold = partInfo.light_size_mlt_threshold;
+		}
+		else
+		{
+			light_source.is_dead = true;
+			light_source.is_on = false;
+		}
 	}
 
 	void Particle::beforeUpdate(void)
 	{
 		if (isDead()) return;
-		transform.rotation += Utils::get_rand_float(0.0f, rotationStep);
+		transform.rotation += Random::getf32(0.0f, rotationStep);
 		if (transform.rotation > 360.0f) transform.rotation -= 360.0f;
 		if (colorRamp.count() > 0)
 		{
@@ -109,7 +127,7 @@ namespace ox
 		if (alpha <= 0 || life <= 0)
 		{
 			color.a = 0;
-			m_dead = true;
+			kill();
 		}
 		else color.a = std::round(alpha);
 	}
@@ -117,6 +135,29 @@ namespace ox
 	void Particle::afterUpdate(void)
 	{
 		transform.translation = position;
+
+		if (emit_light)
+		{
+			auto& lightRef = LightingManager::getLightSource(lightID);
+			lightRef.position = position;
+			lightRef.color = color;
+			if (!m_fade_in)
+			{
+				float sz_mlt = (life / fullLife) + light_size_mlt_threshold;
+				lightRef.size *= sz_mlt;
+			}
+		}
+	}
+
+	void Particle::kill(void)
+	{
+		 m_dead = true;
+		 if (emit_light)
+		 {
+			auto& lightRef = LightingManager::getLightSource(lightID);
+			lightRef.is_dead = true;
+			lightRef.is_on = false;
+		 }
 	}
 
 
@@ -154,12 +195,9 @@ namespace ox
 		return *this;
 	}
 
-	void ParticleEmitter::draw(const RenderTarget& target)
+	void ParticleEmitter::draw(void)
 	{
 		if (isInvalid()) return;
-		const RenderTarget& rt = Renderer2D::getCurrentRenderTarget();
-		if (target.isValid())
-			Renderer2D::setRenderTarget(target);
 		if (m_path.isEnabled() && m_path.exists() && m_path.isEditable())
 		{
 			m_path.draw();
@@ -174,7 +212,6 @@ namespace ox
 			else
 				ox::Renderer2D::drawQuad(ox::Renderer2D::getStaticQuad(part.position, part.size, true), part.color, part.texture, part.tileIndex);
 		}
-		Renderer2D::setRenderTarget(rt);
 	}
 	
 	void ParticleEmitter::update(const Vec2& force)
@@ -229,6 +266,11 @@ namespace ox
 			{
 				part.position = getEmissionRect().getPosition() + getRandomEmissionPoint();
 				part.setup(partInfo);
+				if (partInfo.emit_light)
+				{
+					if (Random::getf32() >= (1.0f - partInfo.light_emit_chance))
+						part.lightID = LightingManager::addLightSource(part.light_source);
+				}
 				count--;
 				if (count == 0) return;
 			}
@@ -255,16 +297,16 @@ namespace ox
 
 	Vec2 ParticleEmitter::getRandomEmissionPoint(void)
 	{
-		return { Utils::get_rand_float(0, getEmissionRect().w),
-				 Utils::get_rand_float(0, getEmissionRect().h) };
+		return Random::getVec2({ 0, getEmissionRect().w }, { 0, getEmissionRect().h });
 	}
 
 
 
-	tParticleInfo ParticleFactory::basicFireParticle(ResourceID texture)
+	tParticleInfo ParticleFactory::basicFireParticle(TextureID texture)
 	{
 		ox::tParticleInfo info;
-		info.texture = texture;
+		info.texture = texture.texture;
+		info.tileIndex = texture.tile;
 		info.speed = 0.45f;
 		info.randomVelocity = { 0.2f, 0.3f };
 		info.randomDirection = 0.24f;
@@ -279,41 +321,65 @@ namespace ox
 		info.addColorToGradient({ 243, 60, 4 }, { 218, 31, 5 }, 0.3f);
 		info.addColorToGradient({ 218, 31, 5 }, { 161, 1, 0 }, 0.05f);
 		info.addColorToGradient({ 161, 1, 0 }, { 161, 1, 0 }, 0.05f);
+		info.emit_light = true;
+		info.light_texture = { ResourceManager::getDefaultLightTexture(), 0 };
+		info.light_emit_chance = 0.3f;
+		info.light_size = { 100, 100 };
+		info.light_size_mlt_threshold = 0.05f;
 		return info;
 	}
 	
-	tParticleInfo ParticleFactory::basicSnowParticle(ResourceID texture)
+	tParticleInfo ParticleFactory::basicSnowParticle(TextureID texture)
 	{
 		ox::tParticleInfo info;
-		info.texture = texture;
+		info.texture = texture.texture;
+		info.tileIndex = texture.tile;
 		info.speed = 1.2f;
-		info.color = { 255, 255, 255, 255 };
+		info.color = { 132, 165, 216 };
 		info.randomVelocity.x = 0.0f;
 		info.randomDirection = 0.0f;
 		info.size = { 16.0f, 16.0f };
 		info.randomSize = { 0.3f, 0.3f };
 		info.lifeSpan = 10000;
-		info.randomDamping = false;
+		info.randomDamping = true;
 		info.randomLifeSpan = 0.0f;
-		info.damping = { 0.0f, 0.0f };
+		info.damping = { 0.08f, 0.0f };
 		info.randomAlpha = 0.1f;
 		return info;
 	}
 
-	ParticleEmitter ParticleFactory::basicFireEmitter(ResourceID texture, Vec2 position)
+	ParticleEmitter ParticleFactory::basicFireEmitter(TextureID texture, Vec2 position, uint32_t pre_emit_cycles)
 	{
-		ParticleEmitter emitter(Rectangle(position, 10.0f, 10.0f), 700);
+		ParticleEmitter emitter(Rectangle(position, 10.0f, 10.0f), 1000);
 		emitter.rotate(90.0f);
 		emitter.setDefaultParticleInfo(ParticleFactory::basicFireParticle(texture));
+		ParticleFactory::__pre_emit(emitter, pre_emit_cycles, { 0.0f, 0.002f });
 		return emitter;
 	}
 
-	ParticleEmitter ParticleFactory::basicSnowEmitter(ResourceID texture, Vec2 windowSize)
+	ParticleEmitter ParticleFactory::basicSnowEmitter(TextureID texture, Vec2 windowSize, uint32_t pre_emit_cycles)
 	{
-		ParticleEmitter emitter(Rectangle(0, 0, windowSize.x, 1.0f), 500);
+		ParticleEmitter emitter(Rectangle(0, 0, windowSize.x, 1.0f), 2000);
 		emitter.rotate(-90.0f);
 		emitter.setDefaultParticleInfo(ParticleFactory::basicSnowParticle(texture));
 		emitter.setWorkingRectangle({ 0.0f, 0.0f, windowSize });
+		ParticleFactory::__pre_emit(emitter, pre_emit_cycles, { 0.002, 0.09 });
 		return emitter;
+	}
+
+	void ParticleFactory::__pre_emit(ParticleEmitter& emitter, uint32_t pre_emit_cycles, Vec2 rand_force_range)
+	{
+		uint32_t current = 0;
+		Vec2 wind { 0.0f, 0.0f };
+		for (uint32_t i = 0; i < pre_emit_cycles; i++)
+		{
+			emitter.emit(Random::geti32(1, 2));
+			if (current++ > 30)
+			{
+				current = 0;
+				wind.x = Random::getf32(rand_force_range.x, rand_force_range.y);
+			}
+			emitter.update(wind);
+		}
 	}
 }

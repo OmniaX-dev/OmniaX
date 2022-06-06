@@ -12,13 +12,11 @@ class TestApp : public ox::Application
     void onFrameEnd(void) override;
     void onRender(void) override;
     void onUpdate(void) override;
-    void onSecondsUpdate(void) override;
     void onImGuiRender(void) override;
     void onKeyPressed(const ox::KeyEvent& evt) override;
     void onMousePressed(const ox::MouseButtonEvent& evt) override;
     void onMouseReleased(const ox::MouseButtonEvent& evt) override;
     void onMouseMoved(const ox::MouseMovedEvent& evt) override;
-    void onSignal(ox::tSignal& signal) override;
 
 private:
     ox::Camera2D camera;
@@ -35,10 +33,11 @@ private:
     ox::TextureAtlasIndex snowTile;
     ox::TextureAtlasIndex logsTile;
     
+    // ox::RenderTarget lightMap;
     ox::RenderTarget scene;
     ox::RenderTarget gui;
-
-    ox::GameClock gameClock;
+    ox::ResourceID lightTex;
+    // ox::ResourceID lightShad;
 };
 
 #endif

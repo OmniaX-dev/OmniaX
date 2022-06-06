@@ -1,3 +1,12 @@
+Version 0.1.1719:
+	Added ox::GameClock class for in-game time management
+	Added Clipboard text management to ox::Utils class
+	Added new ox::Random class in <omniax/utils/Random.hpp> header
+	Added new ox::RTData class
+		Added DeltaTime to ox::RTData
+	Added basic lighting system
+	Added WindowResized Signal
+
 Version 0.1.1458:
 	Added ox::TileAnimation class
 	Added ox::Transform2D struct

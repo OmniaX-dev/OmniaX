@@ -91,7 +91,7 @@ namespace ox
 			return true;
 		}
 		
-		// bool SerialIO::r_Data(StreamIndex addr, ISerializable& outData) //TODO: Potentially dangerous
+		// bool SerialIO::r_Data(StreamIndex addr, ISerializable& outData)
 		// {
 		// 	if (!is_validAddr(addr, outData.getMaxSerializedSize(), nullptr)) return false;
 		// 	return outData.deserialize(m_data, addr);

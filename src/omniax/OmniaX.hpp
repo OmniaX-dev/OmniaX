@@ -13,6 +13,7 @@
 #include <omniax/utils/Defines.hpp>
 #include <omniax/utils/Utils.hpp>
 #include <omniax/utils/DataFile.hpp>
+#include <omniax/utils/Random.hpp>
 
 /** Core **/
 #include <omniax/core/Errors.hpp>
@@ -24,6 +25,7 @@
 #include <omniax/core/Input.hpp>
 #include <omniax/core/GameObject.hpp>
 #include <omniax/core/Particles.hpp>
+#include <omniax/core/Lighting.hpp>
 
 /** Graphics **/
 //#include <omniax/graphics/Animator.hpp>

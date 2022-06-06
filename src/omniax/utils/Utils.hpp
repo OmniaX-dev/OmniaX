@@ -34,31 +34,46 @@ namespace ox
 		December
 	};
 
-	// struct RealTime
-	// {
-	// 	public:
-	// 		RealTime(void);
-	// 		const float& start(void);
-	// 		inline const float& getTimeOfDay(void) const { return m_timeOfDay; }
-	// 		String asString(void);
-	// 		void update(void);
+	class Timer
+	{
+		public:
+			inline Timer(void) { m_started = false; m_current = 0; m_timeUnit = eTimeUnits::Nanoseconds; m_dest = nullptr; }
+			uint64_t start(bool print = true, String name = "", eTimeUnits timeUnit = eTimeUnits::Nanoseconds, IOutputHandler* __destination = nullptr);
+			uint64_t end(bool print = true);
 
-	// 	private:
-	// 		String getFormattedTime(void);
-	// 		String convertMonth(void);
+		private:
+			bool m_started;
+			int64_t m_current;
+			eTimeUnits m_timeUnit;
+			String m_name;
+			IOutputHandler* m_dest;
+	};
 
-	// 	public:
-	// 		uint8_t minutes;
-	// 		uint8_t hours;
-	// 		uint16_t days;
-	// 		uint8_t months;
-	// 		uint16_t years;
+	struct GameClock
+	{
+		public:
+			GameClock(void);
+			const float& start(void);
+			inline const float& getTimeOfDay(void) const { return m_timeOfDay; }
+			String asString(void);
+			void update(void);
 
-	// 	private:
-	// 		sf::Clock m_rtClock;
-	// 		float m_timeOfDay;
-	// 		float m_totalSeconds;
-	// };
+		private:
+			String getFormattedTime(void);
+			String convertMonth(void);
+
+		public:
+			uint8_t minutes;
+			uint8_t hours;
+			uint16_t days;
+			uint8_t months;
+			uint16_t years;
+
+		private:
+			Timer m_rtClock;
+			float m_timeOfDay;
+			float m_totalSeconds;
+	};
 
 	class LocalTime
 	{
@@ -106,21 +121,6 @@ namespace ox
 			String weekDayToText(int32_t day) const override;
 	};
 
-	class Timer
-	{
-		public:
-			inline Timer(void) { m_started = false; m_current = 0; m_timeUnit = eTimeUnits::Nanoseconds; m_dest = nullptr; }
-			uint64_t start(bool print = true, String name = "", eTimeUnits timeUnit = eTimeUnits::Nanoseconds, IOutputHandler* __destination = nullptr);
-			uint64_t end(bool print = true);
-
-		private:
-			bool m_started;
-			int64_t m_current;
-			eTimeUnits m_timeUnit;
-			String m_name;
-			IOutputHandler* m_dest;
-	};
-
 	class IOutputHandler;
 	class Utils
 	{
@@ -137,9 +137,8 @@ namespace ox
 			static String duplicateChar(unsigned char c, uint16_t count);
 			static void sleep(uint32_t __time, eTimeUnits __unit = eTimeUnits::Milliseconds);
 			static uint64_t getRunningTime_ms(void);
-			//static bool setClipboardText(String text);
-			//static String getClipboardText(void);
-			static float get_rand_float(float min = 0.0f, float max = 1.0f);
+			static bool setClipboardText(String text);
+			static String getClipboardText(void);
 			static float map_value(float input, float input_start, float input_end, float output_start, float output_end);
 			static bool loadFileFromHppResource(String output_file_path, const char* resource_buffer, unsigned int size);
 			static void printByteStream(const ByteStream& data, StreamIndex start, uint8_t line_len, uint16_t n_rows, IOutputHandler& out);

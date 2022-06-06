@@ -20,11 +20,8 @@ namespace ox
 			GameObject& translate(Vec2 translation);
 			GameObject& scale(Vec2 scale);
 
-			inline virtual void draw(const RenderTarget& target) {  }
+			inline virtual void draw(void) {  }
 			inline virtual void update(const Vec2& force = { 0.0f, 0.0f }) {  }
-
-			//TODO: Make protected
-			void render(const RenderTarget& target, ResourceID texture = ResourceManager::InvalidResource, TextureAtlasIndex tile_index = Texture::FullTextureCoords);
 
 			inline Color getTintColor(void) const { return m_tintColor; }
 			inline void setTintColor(Color color) { m_tintColor = color; }
@@ -39,6 +36,7 @@ namespace ox
 		protected:
 			void update_transform(void);
 			inline virtual void setVisible(bool v) { m_visible = v; }
+			void render(ResourceID texture = ResourceManager::InvalidResource, TextureAtlasIndex tile_index = Texture::FullTextureCoords);
 
 		private:
 			std::vector<Vec2> m_vertices;

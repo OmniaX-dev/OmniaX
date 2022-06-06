@@ -33,14 +33,10 @@ namespace ox
 		return *this;
 	}
 
-	void GameObject::render(const RenderTarget& target, ResourceID texture, TextureAtlasIndex tile_index)
+	void GameObject::render(ResourceID texture, TextureAtlasIndex tile_index)
 	{
 		if (!m_visible) return;
-		const RenderTarget& rt = Renderer2D::getCurrentRenderTarget();
-		if (target.isValid())
-			Renderer2D::setRenderTarget(target);
 		Renderer2D::drawQuad(m_vertices, m_tintColor, texture, tile_index);
-		Renderer2D::setRenderTarget(rt);
 	}
 	
 	void GameObject::update_transform(void)

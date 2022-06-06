@@ -159,6 +159,17 @@ namespace ox
         glUniformMatrix4fv(m_uniforms.at(uniform_name), 1, GL_FALSE, &value[0][0]);
     }
     
+    void Shader::updateUniform_arri(String uniform_name, int32_t array_size, const int32_t* value)
+    {
+        if (!__can_update_uniform(uniform_name)) return;
+        glUniform1iv(m_uniforms.at(uniform_name), array_size, value);
+    }
+    
+    void Shader::updateUniform_arrf(String uniform_name, int32_t array_size, const float* value)
+    {
+        if (!__can_update_uniform(uniform_name)) return;
+        glUniform1fv(m_uniforms.at(uniform_name), array_size, value);
+    }
     
 
 

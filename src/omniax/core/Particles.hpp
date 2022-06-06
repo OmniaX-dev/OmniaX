@@ -7,6 +7,7 @@
 #include <omniax/graphics/Color.hpp>
 #include <omniax/core/ResourceManager.hpp>
 #include <omniax/utils/Spline.hpp>
+#include <omniax/core/Lighting.hpp>
 
 namespace ox
 {
@@ -121,6 +122,12 @@ namespace ox
 		bool fadeIn { true };
 		bool allDirectionos { false };
 		bool square { true };
+		bool emit_light { false };
+
+		Vec2 light_size { 30, 30 };
+		TextureID light_texture;
+		float light_size_mlt_threshold { 0.05f };
+		float light_emit_chance { 0.4f };
 	
 		float angle { 0.0f };
 		float speed { 1.0f };
@@ -142,9 +149,9 @@ namespace ox
 			void setup(tParticleInfo partInfo);
 			void beforeUpdate(void) override;
 			void afterUpdate(void) override;
+			void kill(void);
 			inline bool isReady(void) { return m_ready; }
 			inline bool isDead(void) { return m_dead; }
-			inline void kill(void) { m_dead = true; }
 
 		private:
 			float m_alpha_dec { 0 };
@@ -170,6 +177,11 @@ namespace ox
 			bool fadeIn { true };
 
 			ColorRamp colorRamp;
+
+			tLightSource light_source;
+			LightID lightID;
+			bool emit_light { false };
+			float light_size_mlt_threshold { 0.0f };
 	};
 
 	class ParticleEmitter : public GameObject
@@ -180,7 +192,7 @@ namespace ox
 			ParticleEmitter(Vec2 position, uint32_t maxParticles = 400);
 			ParticleEmitter& create(Rectangle emissionRect, uint32_t maxParticles = 400);
 
-			void draw(const RenderTarget& target) override;
+			void draw(void) override;
 			void update(const Vec2& force = { 0.0f, 0.0f }) override;
 
 			void emit(tParticleInfo partInfo, uint32_t count = 1);
@@ -226,11 +238,14 @@ namespace ox
 	class ParticleFactory
 	{
 		public:
-			static tParticleInfo basicFireParticle(ResourceID texture = ResourceManager::InvalidResource);
-			static tParticleInfo basicSnowParticle(ResourceID texture = ResourceManager::InvalidResource);
+			static tParticleInfo basicFireParticle(TextureID texture = { ResourceManager::InvalidResource, 0 });
+			static tParticleInfo basicSnowParticle(TextureID texture = { ResourceManager::InvalidResource, 0 });
 	
-			static ParticleEmitter basicFireEmitter(ResourceID texture, Vec2 position);
-			static ParticleEmitter basicSnowEmitter(ResourceID texture, Vec2 windowSize);
+			static ParticleEmitter basicFireEmitter(TextureID texture, Vec2 position, uint32_t pre_emit_cycles = 0);
+			static ParticleEmitter basicSnowEmitter(TextureID texture, Vec2 windowSize, uint32_t pre_emit_cycles = 0);
+
+		private:
+			static void __pre_emit(ParticleEmitter& emitter, uint32_t pre_emit_cycles, Vec2 rand_force_range);
 	};
 }
 

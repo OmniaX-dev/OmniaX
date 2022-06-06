@@ -7,6 +7,8 @@
 #include <omniax/core/GLBuffers.hpp>
 #include <omniax/graphics/Texture.hpp>
 #include <omniax/runtime/Application.hpp>
+#include <omniax/graphics/BitmapFont.hpp>
+#include <omniax/core/Renderer2D.hpp>
 
 namespace ox
 {
@@ -29,15 +31,30 @@ namespace ox
             case Shader::ERR_FAILED_TO_REGISTER_UNIFORM: return se.add("Failed to register uniform").str();
             case Shader::ERR_FAILED_TO_UPDATE_UNIFORM: return se.add("Failed to update uniform").str();
 
-            /** ox::VertexArray Errors */
+            /** ox::VertexArray Errors **/
             case VertexArray::ERR_NO_EBO_SET: return se.add("No ElementBuffer set in VertexArray.").str();
 
-            /** ox::Application Errors */
+            /** ox::Application Errors **/
             case Application::ERR_WINDOW_CREATE_FAIL: return se.add("Application failed to create ox::Window instance.").str();
+            case Application::ERR_INVALID_APP_INSTANCE: return se.add("Invalid ox::Application reference in GLFW..").str();
 
-            /** ox::Texture Errors */
+            /** ox::Texture Errors **/
             case Texture::ERR_IMAGE_LOAD_FAILED: return se.add("Failed to load Texture.").str();
             case Texture::ERR_NO_DATA_STORED: return se.add("Attempting to retrieve local Texture data of a non-stored instance.").str();
+
+            /** ox::BitmapFont Errors **/
+            case BitmapFont::ERR_INVALID_TEXTURE: return se.add("Invalid BitmapFont Texture.").str();
+            case BitmapFont::ERR_INVALID_TEXTURE_SIZE: return se.add("Invalid Size for ox::BitmapFont Texture: width and height must both be multiples of 16.").str();
+
+            /** ox::Renderer2D::Text Errors **/
+            case Renderer2D::Text::ERR_INVALID_BITMAPFONT: return se.add("Invalid BitmapFont.").str();
+
+            /** ox::Renderer2D Errors **/
+            case Renderer2D::ERR_INVALID_TEXTURE: return se.add("Invalid Texture.").str();
+            case Renderer2D::ERR_INVALID_SHADER: return se.add("Invalid Shader.").str();
+
+            /** ox::RenderTarget Errors **/
+            case RenderTarget::ERR_FAILED_TO_CREATE_FRAMEBUFFER: return se.add("Failed to create FrameBuffer in ox::RenderTarget.").str();
 
             /** Custom or undefined Errors **/
             default:

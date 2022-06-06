@@ -24,6 +24,8 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/vendor/imgui/imgui_impl_opengl3.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/vendor/imgui/imgui_tables.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/vendor/imgui/imgui_widgets.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/vendor/clip/clip.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/vendor/clip/image.cpp
 
     # Utils
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/BaseObject.cpp
@@ -38,6 +40,7 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/DataFile.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Serial.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Spline.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/utils/Random.cpp
 
     # Graphics
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/graphics/Color.cpp
@@ -60,11 +63,23 @@ list(APPEND sources
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Input.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/GameObject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Particles.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/core/Lighting.cpp
 
     # Runtime
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/runtime/Application.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/omniax/runtime/Signals.cpp
 )
+
+if (WIN32)
+  list(APPEND sources
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/vendor/clip/clip_win.cpp
+  )
+endif (WIN32)
+if (UNIX)
+  list(APPEND sources
+    ${CMAKE_CURRENT_LIST_DIR}/src/omniax/vendor/clip/clip_x11.cpp
+  )
+endif (UNIX)
 
 list(APPEND test_sources
     ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp

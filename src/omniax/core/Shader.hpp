@@ -36,6 +36,8 @@ namespace ox
 			void updateUniform_vec4f(String uniform_name, float x, float y, float z, float w);
 			void updateUniform_vec4f(String uniform_name, const Color& value);
 			void updateUniform_mat4f(String uniform_name, const glm::mat4& value);
+			void updateUniform_arri(String uniform_name, int32_t array_size, const int32_t* value);
+			void updateUniform_arrf(String uniform_name, int32_t array_size, const float* value);
 
 			inline static void setShaderFolder(String folder_path) { Shader::s_shader_folder = folder_path; }
 			inline static String getShaderFolder(void) { return Shader::s_shader_folder; }

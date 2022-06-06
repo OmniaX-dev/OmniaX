@@ -46,7 +46,7 @@ def find_todos(path, base_path):
             base_path = base_path[:len(base_path) - 2]
         f = base_path[base_path.rfind("/"):]
         #indices = [m.start() for m in re.finditer('/', path)]
-        todos.insert(0, ":" + path[len(base_path) - len(f) + 1:].strip());
+        todos.insert(0, ":" + path)#[len(base_path) - len(f) + 1:].strip())
     return todos
 
 def fill_list(dir, todo_list, base_path):
@@ -59,22 +59,38 @@ def fill_list(dir, todo_list, base_path):
 todoList = []
 fill_list(base_directory, todoList, base_directory)
 
+
 model = QtGui.QStandardItemModel()
 window.listView.setModel(model)
 
+vscode_open = []
+
 j = 0
+__file = ""
 for i in todoList:
     item = QtGui.QStandardItem(i)
     if i.startswith(":"):
         item.setBackground(QtGui.QColor(40, 0, 0))
         item.setFont(QFont("Lucida Console", 12, QFont.Bold))
         item.setForeground(QtGui.QColor(170, 170, 170))
+        vscode_open.append("")
+        __file = i[1:]
     else:
         item.setBackground(QtGui.QColor(0, 0, 0))
         item.setFont(QFont("Lucida Console", 12))
         item.setForeground(QtGui.QColor(50, 255, 50))
+        __ln = i.strip()[5:i.index(":") - 1]
+        vscode_open.append("code -g \"" + __file + ":" + __ln + "\"")
     j = j + 1
     model.appendRow(item)
+
+def test_click(self):
+    __str = vscode_open[self.row()]
+    if __str != "":
+        print(__str)
+        os.system(__str)
+
+window.listView.doubleClicked.connect(test_click)
 
 window.setGeometry(100, 100, 1100, 500)
 window.setWindowIcon(iconFromBase64(icon_b64))

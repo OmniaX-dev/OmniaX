@@ -15,23 +15,29 @@ namespace ox
 			Application& create(int32_t windowWidth, int32_t windowHeight, String windowTitle, String windowIconPath = "", int32_t gl_major_version_hint = 4, int32_t gl_minor_version_hint = 2, int32_t gl_profile = GLFW_OPENGL_CORE_PROFILE);
 			void shutDown(void);
 			void nextFrame(void);
-			inline void addOpenGLClearBit(uint32_t gl_clear_bit) { m_gl_clear_bit_mask |= gl_clear_bit; }
 
 			inline bool isRunning(void) { return isValid() && m_window.isOpen(); }
 			inline uint32_t& getFps(void) { return m_fps; }
 			inline void enableVSync(bool enabled = true) { glfwSwapInterval(enabled ? 1 : 0); }
+			inline IPoint getWindowSize(void) { return m_window.getSize(); }
+			inline int32_t getWindowWidth(void) { return m_window.getSize().x; }
+			inline int32_t getWindowHeight(void) { return m_window.getSize().y; }
+
+			void handleSignal(tSignal& signal) override;
 
 			virtual void onFrameStart(void) {  }
 			virtual void onFrameEnd(void) {  }
 			virtual void onSetup(void) {  }
 			virtual void onRender(void) {  }
 			virtual void onUpdate(void) {  }
+			virtual void onSecondsUpdate(void) {  }
 			virtual void onImGuiRender(void) {  }
 			virtual void onKeyPressed(const KeyEvent& evt) {  }
 			virtual void onKeyReleased(const KeyEvent& evt) {  }
 			virtual void onMousePressed(const MouseButtonEvent& evt) {  }
 			virtual void onMouseReleased(const MouseButtonEvent& evt) {  }
 			virtual void onMouseMoved(const MouseMovedEvent& evt) {  }
+			virtual void onSignal(tSignal& signal) {  }
 
 			BaseObject& getCustomData1(void);
 			BaseObject& getCustomData2(void);
@@ -57,11 +63,8 @@ namespace ox
 		protected:
 			Window m_window;
 			Color m_clearColor;
-            int32_t m_windowWidth { 0 }; //TODO: Make theese dynamic (probably in the ox::Window class)
-            int32_t m_windowHeight { 0 };
 
 		private:
-			uint32_t m_gl_clear_bit_mask { GL_COLOR_BUFFER_BIT };
 			BaseObject* m_custom_data_1 = nullptr;
 			BaseObject* m_custom_data_2 = nullptr;
 			BaseObject* m_custom_data_3 = nullptr;
@@ -70,9 +73,11 @@ namespace ox
 			uint32_t m_rtfps { 0 };
 			uint32_t m_fps { 0 };
 			double m_prevTime { 0.0 };
+			double m_lastFrameTime { 0.0f };
 
 		public:
 			inline static constexpr int32_t ERR_WINDOW_CREATE_FAIL = OX_APPLICATION_ERR_MASK + 0x0001;
+			inline static constexpr int32_t ERR_INVALID_APP_INSTANCE = OX_APPLICATION_ERR_MASK + 0x0002;
 	};
 }
 

@@ -1,10 +1,15 @@
 #include "RichString.hpp"
+#include <omniax/utils/Logger.hpp>
 
 namespace ox
 {
 	tRichChar RichString::at(uint32_t index)
 	{
-		if (index >= m_text.size()) return tRichChar(); //TODO: Error
+		if (index >= m_text.size())
+		{
+			OX_WARN("ox::RichString::at(...): Index out of bounds.");
+			return tRichChar();
+		}
 		return { (unsigned char)m_text[index], m_foreground[index], m_background[index] };
 	}
 

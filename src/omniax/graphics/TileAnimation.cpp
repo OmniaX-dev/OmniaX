@@ -3,6 +3,7 @@
 #include <omniax/graphics/Texture.hpp>
 #include <omniax/core/ResourceManager.hpp>
 #include <omniax/core/Renderer2D.hpp>
+#include <omniax/utils/Random.hpp>
 #include <iostream>
 
 namespace ox
@@ -62,7 +63,7 @@ namespace ox
 			m_current_time = 0;
 			if (m_randomFrames)
 			{
-				m_current_frame = RANDOM(0, m_frames.size());
+				m_current_frame = Random::geti32(0, m_frames.size());
 			}
 			else if (m_playBackwards)
 			{
